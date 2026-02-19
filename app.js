@@ -198,12 +198,13 @@ app.post("/register", async (req, res) => {
   });
   writeDb(db);
   setFlash(req, "success", "Conta criada com sucesso. Entre no sistema.");
-  res.redirect("/login");
+  res.redirect("/login?mode=signin");
 });
 
 app.get("/login", (req, res) => {
   if (req.session.user) return res.redirect("/redirect");
-  res.render("auth/login");
+  const mode = req.query.mode === "signin" ? "signin" : "choice";
+  res.render("auth/login", { mode });
 });
 
 app.post("/login", async (req, res) => {
@@ -212,13 +213,13 @@ app.post("/login", async (req, res) => {
   const user = db.users.find((u) => u.email.toLowerCase() === email.toLowerCase());
   if (!user) {
     setFlash(req, "error", "Credenciais invalidas.");
-    return res.redirect("/login");
+    return res.redirect("/login?mode=signin");
   }
 
   const ok = await bcrypt.compare(password, user.passwordHash);
   if (!ok) {
     setFlash(req, "error", "Credenciais invalidas.");
-    return res.redirect("/login");
+    return res.redirect("/login?mode=signin");
   }
 
   req.session.user = {
@@ -772,12 +773,16 @@ app.get("/admin/clientes/pdf", requireRole("admin"), (req, res) => {
 
   const drawMainHeader = () => {
     doc.save();
-    doc.roundedRect(margin, margin, contentWidth, pageHeight - margin * 2, 18).fill(colors.pageBg);
+    doc.rect(0, 0, pageWidth, pageHeight).fill(colors.pageBg);
     doc.restore();
 
     doc.save();
     doc.roundedRect(margin, margin, contentWidth, headerBandHeight, 16).fill(colors.headerBg);
-    doc.roundedRect(margin, margin + headerBandHeight - 8, contentWidth, 8, 0).fill(colors.gold);
+    doc.lineWidth(4);
+    doc
+      .moveTo(margin + 14, margin + headerBandHeight - 8)
+      .lineTo(margin + contentWidth - 14, margin + headerBandHeight - 8)
+      .stroke(colors.gold);
     doc.restore();
 
     if (logoPath) {

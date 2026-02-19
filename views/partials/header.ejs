@@ -13,8 +13,7 @@
       <a href="/" class="logo">Ela<span>&</span>Ele</a>
       <nav class="nav">
         <% if (!currentUser) { %>
-          <a href="/login"><i class="bi bi-shield-lock icon" aria-hidden="true"></i> Entrar</a>
-          <a href="/register"><i class="bi bi-person-plus icon" aria-hidden="true"></i> Criar conta</a>
+          <a href="/login"><i class="bi bi-calendar-plus icon" aria-hidden="true"></i> Criar uma reserva</a>
         <% } else if (currentUser.role === "admin") { %>
           <a href="/admin/dashboard"><i class="bi bi-speedometer2 icon" aria-hidden="true"></i> Dashboard</a>
           <a href="/admin/clientes"><i class="bi bi-people icon" aria-hidden="true"></i> Clientes</a>

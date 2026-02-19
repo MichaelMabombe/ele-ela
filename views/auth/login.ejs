@@ -1,29 +1,41 @@
 <%- include("../partials/header") %>
 <section class="auth auth-login">
-  <div class="auth-head">
-    <p class="kicker">Acesso seguro</p>
-    <h1>Entrar no sistema</h1>
-    <p class="muted">Use o seu email e senha para continuar.</p>
-  </div>
-  <form method="post" action="/login" class="form">
-    <label>Email</label>
-    <div class="input-with-icon">
-      <i class="bi bi-envelope icon" aria-hidden="true"></i>
-      <input type="email" name="email" autocomplete="username" placeholder="seuemail@exemplo.com" required />
+  <% if (mode === "choice") { %>
+    <div class="auth-head">
+      <p class="kicker">Comecar reserva</p>
+      <h1>Criar uma reserva</h1>
+      <p class="muted">Para continuar, crie a sua conta ou entre na conta existente.</p>
     </div>
-
-    <label>Senha
-      <div class="input-with-icon password-field">
-        <i class="bi bi-lock icon" aria-hidden="true"></i>
-        <input id="login-password" type="password" name="password" autocomplete="current-password" placeholder="Digite sua senha" required />
-        <button id="toggle-password" type="button" class="password-toggle" aria-label="Mostrar senha">
-          <i class="bi bi-eye" aria-hidden="true"></i>
-        </button>
+    <div class="form">
+      <a class="btn auth-submit" href="/register">Criar conta</a>
+      <a class="btn btn-outline auth-submit" href="/login?mode=signin">Ja tenho conta</a>
+    </div>
+  <% } else { %>
+    <div class="auth-head">
+      <p class="kicker">Acesso seguro</p>
+      <h1>Entrar no sistema</h1>
+      <p class="muted">Use o seu email e senha para continuar.</p>
+    </div>
+    <form method="post" action="/login" class="form">
+      <label>Email</label>
+      <div class="input-with-icon">
+        <i class="bi bi-envelope icon" aria-hidden="true"></i>
+        <input type="email" name="email" autocomplete="username" placeholder="seuemail@exemplo.com" required />
       </div>
-    </label>
-    <button class="btn auth-submit" type="submit">Entrar</button>
-  </form>
-  <p class="auth-alt">Ainda nao tem conta? <a href="/register">Criar conta</a></p>
+
+      <label>Senha
+        <div class="input-with-icon password-field">
+          <i class="bi bi-lock icon" aria-hidden="true"></i>
+          <input id="login-password" type="password" name="password" autocomplete="current-password" placeholder="Digite sua senha" required />
+          <button id="toggle-password" type="button" class="password-toggle" aria-label="Mostrar senha">
+            <i class="bi bi-eye" aria-hidden="true"></i>
+          </button>
+        </div>
+      </label>
+      <button class="btn auth-submit" type="submit">Entrar</button>
+    </form>
+    <p class="auth-alt">Ainda nao tem conta? <a href="/register">Criar conta</a></p>
+  <% } %>
 </section>
 <script>
   (function () {
