@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "node app.js"
+    "dev": "node app.js",
+    "mysql:migrate": "node scripts/migrate-json-to-mysql.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
     "ejs": "^4.0.1",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
+    "mysql2": "^3.17.2",
     "pdfkit": "^0.17.2",
     "uuid": "^13.0.0"
   },

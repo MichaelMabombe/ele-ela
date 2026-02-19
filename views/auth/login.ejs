@@ -1,5 +1,5 @@
 <%- include("../partials/header") %>
-<section class="auth auth-login">
+<section class="auth auth-login login-screen">
   <% if (mode === "choice") { %>
     <div class="auth-head auth-head-choice">
       <p class="kicker">Comecar reserva</p>
@@ -19,30 +19,57 @@
       </a>
     </div>
   <% } else { %>
-    <div class="auth-head">
-      <p class="kicker">Acesso seguro</p>
-      <h1>Entrar no sistema</h1>
-      <p class="muted">Use o seu email e senha para continuar.</p>
-    </div>
-    <form method="post" action="/login" class="form">
-      <label>Email</label>
-      <div class="input-with-icon">
-        <i class="bi bi-envelope icon" aria-hidden="true"></i>
-        <input type="email" name="email" autocomplete="username" placeholder="seuemail@exemplo.com" required />
-      </div>
-
-      <label>Senha
-        <div class="input-with-icon password-field">
-          <i class="bi bi-lock icon" aria-hidden="true"></i>
-          <input id="login-password" type="password" name="password" autocomplete="current-password" placeholder="Digite sua senha" required />
-          <button id="toggle-password" type="button" class="password-toggle" aria-label="Mostrar senha">
-            <i class="bi bi-eye" aria-hidden="true"></i>
-          </button>
+    <section class="login-page">
+      <article class="auth auth-login login-main-card">
+        <div class="login-accent-bar" aria-hidden="true"></div>
+        <div class="auth-head">
+          <p class="kicker login-kicker">Acesso seguro</p>
+          <h1>Entrar no sistema</h1>
+          <p class="muted">Use o seu email e senha para continuar.</p>
+          <div class="login-trust-row">
+            <span class="login-trust-pill"><i class="bi bi-shield-check" aria-hidden="true"></i> Sessao protegida</span>
+            <span class="login-trust-pill"><i class="bi bi-lightning-charge" aria-hidden="true"></i> Acesso rapido</span>
+          </div>
         </div>
-      </label>
-      <button class="btn auth-submit" type="submit">Entrar</button>
-    </form>
-    <p class="auth-alt">Ainda nao tem conta? <a href="/register">Criar conta</a></p>
+        <form method="post" action="/login" class="form login-form">
+          <label>Email</label>
+          <div class="input-with-icon">
+            <i class="bi bi-envelope icon" aria-hidden="true"></i>
+            <input type="email" name="email" autocomplete="username" placeholder="seuemail@exemplo.com" required />
+          </div>
+
+          <label>Senha
+            <div class="input-with-icon password-field">
+              <i class="bi bi-lock icon" aria-hidden="true"></i>
+              <input id="login-password" type="password" name="password" autocomplete="current-password" placeholder="Digite sua senha" required />
+              <button id="toggle-password" type="button" class="password-toggle" aria-label="Mostrar senha">
+                <i class="bi bi-eye" aria-hidden="true"></i>
+              </button>
+            </div>
+          </label>
+          <button class="btn auth-submit login-submit" type="submit"><i class="bi bi-box-arrow-in-right icon" aria-hidden="true"></i> Entrar com seguranca</button>
+        </form>
+        <div class="login-bottom-links">
+          <p class="auth-alt">Ainda nao tem conta? <a href="/register">Criar conta</a></p>
+          <a class="login-back-link" href="/login">Voltar a selecao</a>
+        </div>
+      </article>
+
+      <aside class="card login-side-card">
+        <p class="kicker login-kicker-muted">Protecao</p>
+        <h3>Seu acesso com seguranca</h3>
+        <ul class="login-benefits">
+          <li><i class="bi bi-shield-lock icon" aria-hidden="true"></i> Sessao protegida para sua conta</li>
+          <li><i class="bi bi-calendar-check icon" aria-hidden="true"></i> Acesso rapido as suas reservas</li>
+          <li><i class="bi bi-credit-card icon" aria-hidden="true"></i> Pagamentos e historico em um so lugar</li>
+        </ul>
+        <div class="login-side-steps">
+          <p><strong>1.</strong> Entre na sua conta</p>
+          <p><strong>2.</strong> Escolha os servicos</p>
+          <p><strong>3.</strong> Confirme e reserve</p>
+        </div>
+      </aside>
+    </section>
   <% } %>
 </section>
 <script>

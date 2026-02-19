@@ -45,13 +45,13 @@
   </div>
 
   <% if (viewMode === "calendar") { %>
-    <section class="card">
+    <section class="card agenda-calendar-card">
       <div class="calendar-toolbar">
         <a class="btn btn-outline btn-sm" href="/admin/agenda?mode=calendar&month=<%= safePrevMonthParam %>">&lt; Mes anterior</a>
-        <h2><%= safeMonthLabel %></h2>
+        <h2><i class="bi bi-calendar2-week icon" aria-hidden="true"></i><%= safeMonthLabel %></h2>
         <a class="btn btn-outline btn-sm" href="/admin/agenda?mode=calendar&month=<%= safeNextMonthParam %>">Proximo mes &gt;</a>
       </div>
-      <p class="muted">Reservas de <%= safeMonthRange.start %> ate <%= safeMonthRange.end %>.</p>
+      <p class="muted calendar-range">Reservas de <%= safeMonthRange.start %> ate <%= safeMonthRange.end %>.</p>
       <div class="calendar-weekdays">
         <% safeWeekdayNames.forEach((weekday) => { %>
           <div><%= weekday %></div>
@@ -59,17 +59,19 @@
       </div>
       <div class="calendar-grid">
         <% safeCalendarDays.forEach((day) => { %>
-          <article class="calendar-day <%= day.inCurrentMonth ? '' : 'calendar-day-muted' %>">
-            <p class="calendar-day-number"><%= day.day %></p>
+          <article class="calendar-day <%= day.inCurrentMonth ? '' : 'calendar-day-muted' %> <%= day.reservations.length > 0 ? 'calendar-day-has-events' : '' %>">
+            <p class="calendar-day-number"><%= day.day %> <% if (day.reservations.length > 0) { %><span class="calendar-day-count"><%= day.reservations.length %></span><% } %></p>
             <% if (day.reservations.length === 0) { %>
               <p class="muted">Sem reservas</p>
             <% } else { %>
               <ul class="calendar-events">
                 <% day.reservations.slice(0, 4).forEach((r) => { %>
                   <li>
-                    <strong><%= r.time %></strong>
-                    <span><%= usersById[r.clientId]?.name || "Cliente" %></span>
-                    <span class="badge badge-status badge-status-<%= r.status %>"><%= r.status %></span>
+                    <strong><i class="bi bi-clock icon" aria-hidden="true"></i><%= r.time %></strong>
+                    <span><i class="bi bi-person icon" aria-hidden="true"></i><%= usersById[r.clientId]?.name || "Cliente" %></span>
+                    <span class="badge badge-status badge-status-<%= r.status %>">
+                      <%= r.status === "pending" ? "Pendente" : r.status === "confirmed" ? "Confirmada" : r.status === "completed" ? "Concluida" : "Cancelada" %>
+                    </span>
                   </li>
                 <% }) %>
               </ul>

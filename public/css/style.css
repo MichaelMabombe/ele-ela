@@ -493,8 +493,11 @@ h3 {
 .services-ticker-viewport {
   overflow: hidden;
   border-radius: 16px;
-  border: 1px solid #ffd8c4;
-  background: linear-gradient(180deg, rgba(255, 252, 249, 0.95), rgba(255, 247, 241, 0.95));
+  border: 1px solid #b9e3f3;
+  background:
+    radial-gradient(120px 80px at 18% 22%, rgba(255, 255, 255, 0.65), transparent 75%),
+    radial-gradient(160px 100px at 78% 16%, rgba(168, 226, 248, 0.45), transparent 78%),
+    linear-gradient(180deg, rgba(42, 182, 223, 0.26) 0%, rgba(118, 216, 240, 0.2) 52%, rgba(243, 231, 203, 0.28) 100%);
   padding: 0.75rem 0;
 }
 
@@ -512,9 +515,11 @@ h3 {
 
 .ticker-card {
   min-width: 230px;
-  border: 1px solid #ffd9c8;
-  box-shadow: 0 8px 18px rgba(23, 36, 44, 0.08);
-  background: #fffdfb;
+  border: 1px solid #b5deee;
+  box-shadow: 0 10px 20px rgba(8, 88, 113, 0.18);
+  background:
+    linear-gradient(170deg, rgba(54, 186, 228, 0.36), rgba(138, 220, 243, 0.32) 45%, rgba(241, 224, 188, 0.34)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.45));
   padding: 0;
 }
 
@@ -523,10 +528,13 @@ h3 {
   height: 120px;
   object-fit: cover;
   display: block;
+  filter: saturate(1.08) contrast(1.04);
 }
 
 .ticker-card-body {
   padding: 0.7rem 0.75rem 0.85rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(245, 252, 255, 0.82));
+  border-top: 1px solid rgba(160, 219, 239, 0.8);
 }
 
 .ticker-card-body h3 {
@@ -854,6 +862,150 @@ h3 {
 
 .register-side-note {
   margin: 0.75rem 0 0;
+}
+
+.login-page {
+  display: grid;
+  grid-template-columns: minmax(320px, 520px) minmax(230px, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.login-screen {
+  max-width: 980px;
+  border: 1px solid #b9e3f3;
+  background:
+    radial-gradient(160px 100px at 12% 14%, rgba(255, 255, 255, 0.62), transparent 74%),
+    radial-gradient(170px 110px at 88% 10%, rgba(166, 225, 247, 0.5), transparent 78%),
+    linear-gradient(180deg, rgba(42, 182, 223, 0.2) 0%, rgba(118, 216, 240, 0.16) 55%, rgba(243, 231, 203, 0.24) 100%);
+  box-shadow: 0 16px 34px rgba(7, 76, 98, 0.16);
+}
+
+.login-main-card {
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.9), rgba(238, 250, 255, 0.85));
+  border-color: #b8deed;
+}
+
+.login-accent-bar {
+  height: 6px;
+  margin: -1.2rem -1.2rem 0.85rem;
+  background: linear-gradient(90deg, #ff6f3c, #ff8a00, #19b5ae);
+}
+
+.login-kicker {
+  color: #fff;
+  background: linear-gradient(120deg, #ff6f3c, #ff8a00);
+  border-color: transparent;
+}
+
+.login-trust-row {
+  margin-top: 0.6rem;
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.login-trust-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  background: #fff5ec;
+  color: #8a482c;
+  border: 1px solid #ffd8c5;
+  border-radius: 999px;
+  padding: 0.26rem 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.login-form {
+  gap: 0.95rem;
+}
+
+.login-submit {
+  margin-top: 0.15rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.login-side-card {
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.92), rgba(232, 248, 255, 0.88));
+  border-color: #b8deed;
+}
+
+.login-kicker-muted {
+  margin-bottom: 0.45rem;
+  color: #a34c25;
+  border-color: #ffd8c5;
+  background: #fff2e8;
+}
+
+.login-side-card h3 {
+  margin: 0.2rem 0 0.6rem;
+  color: #6c2f17;
+}
+
+.login-benefits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.login-benefits li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #1d4e61;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #bde0ee;
+  border-radius: 12px;
+  padding: 0.58rem 0.62rem;
+}
+
+.login-benefits .icon {
+  color: #d15326;
+}
+
+.login-side-steps {
+  margin-top: 0.75rem;
+  border-top: 1px dashed #ffd8c5;
+  padding-top: 0.65rem;
+  display: grid;
+  gap: 0.32rem;
+  color: #7b4327;
+}
+
+.login-side-steps p {
+  margin: 0;
+}
+
+.login-bottom-links {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.login-back-link {
+  font-size: 0.86rem;
+  color: #a34c25;
+  text-decoration: none;
+  border-bottom: 1px dashed #d98d68;
+}
+
+.login-back-link:hover {
+  color: #7b3418;
 }
 
 .auth {
@@ -1505,16 +1657,33 @@ th {
   flex-wrap: wrap;
 }
 
+.agenda-calendar-card {
+  background:
+    radial-gradient(120px 70px at 14% 8%, rgba(202, 240, 252, 0.42), transparent 72%),
+    radial-gradient(180px 90px at 88% 10%, rgba(255, 214, 186, 0.28), transparent 72%),
+    rgba(255, 255, 255, 0.95);
+}
+
 .calendar-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.7rem;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px dashed #ffd8c5;
 }
 
 .calendar-toolbar h2 {
   margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #7a3518;
+}
+
+.calendar-range {
+  margin: 0 0 0.6rem;
 }
 
 .calendar-weekdays {
@@ -1527,8 +1696,12 @@ th {
 .calendar-weekdays div {
   font-weight: 700;
   font-size: 0.82rem;
-  color: #6f3a20;
+  color: #844427;
   text-align: center;
+  background: #fff4ec;
+  border: 1px solid #ffd8c5;
+  border-radius: 10px;
+  padding: 0.32rem 0.2rem;
 }
 
 .calendar-grid {
@@ -1543,6 +1716,17 @@ th {
   background: #fffdfb;
   padding: 0.45rem;
   min-height: 150px;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.calendar-day:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(20, 37, 45, 0.08);
+}
+
+.calendar-day-has-events {
+  border-color: #ffb794;
+  background: linear-gradient(180deg, #fffaf6, #fff2ea);
 }
 
 .calendar-day-muted {
@@ -1554,6 +1738,24 @@ th {
   margin: 0 0 0.35rem;
   font-family: "League Spartan", sans-serif;
   font-size: 1.05rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #6b2f16;
+}
+
+.calendar-day-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 0.32rem;
+  border-radius: 999px;
+  background: #ff6f3c;
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 700;
 }
 
 .calendar-events {
@@ -1572,6 +1774,13 @@ th {
   display: grid;
   gap: 0.2rem;
   font-size: 0.78rem;
+}
+
+.calendar-events li strong,
+.calendar-events li span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
 }
 
 .service-modal-open {
@@ -1831,6 +2040,10 @@ th {
   }
 
   .register-page {
+    grid-template-columns: 1fr;
+  }
+
+  .login-page {
     grid-template-columns: 1fr;
   }
 
