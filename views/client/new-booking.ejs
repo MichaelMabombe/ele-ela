@@ -1,58 +1,115 @@
 <%- include("../partials/header") %>
-<section class="auth">
-  <h1>Fechar Reserva (Checkout)</h1>
-  <p><strong>Tipo de cliente:</strong> <%= clientType === "postpaid" ? "Pos-pago" : "Pre-pago" %></p>
-
-  <div class="card">
-    <h3>Servicos selecionados</h3>
-    <% if (cartSummary.lines.length === 0) { %>
-      <p>Carrinho vazio.</p>
-    <% } else { %>
-      <ul class="cart-list">
-        <% cartSummary.lines.forEach(line => { %>
-          <li><%= line.name %> x<%= line.qty %> - <%= line.subtotal %> MT</li>
-        <% }) %>
-      </ul>
-      <p><strong>Total:</strong> <%= cartSummary.totalAmount %> MT</p>
-      <p><strong>Duracao estimada:</strong> <%= cartSummary.totalDuration %> min</p>
-    <% } %>
+<section class="checkout-page">
+  <div class="checkout-header">
+    <p class="kicker checkout-kicker">Fechar Reserva (Checkout)</p>
+    <h1>Finalize a sua reserva</h1>
+    <p class="muted">Tipo de cliente: <strong><%= clientType === "postpaid" ? "Pos-pago" : "Pre-pago" %></strong></p>
   </div>
 
-  <form method="post" action="/cliente/reservas" class="form">
-    <label>Profissional
-      <select name="staffId" required>
-        <option value="">Selecione</option>
-        <% staff.forEach(p => { %>
-          <option value="<%= p.id %>"><%= p.name %> - <%= p.specialty %></option>
-        <% }) %>
-      </select>
-    </label>
-    <label>Data
-      <input type="date" name="date" min="<%= today %>" required />
-    </label>
-    <label>Hora de inicio
-      <select name="time" required>
-        <option value="">Selecione</option>
-        <option>08:00</option>
-        <option>09:00</option>
-        <option>10:00</option>
-        <option>11:00</option>
-        <option>12:00</option>
-        <option>14:00</option>
-        <option>15:00</option>
-        <option>16:00</option>
-        <option>17:00</option>
-      </select>
-    </label>
-    <label>Metodo de pagamento
-      <select name="paymentMethod" <%= clientType === "prepaid" ? "required" : "" %>>
-        <option value=""><%= clientType === "postpaid" ? "Pagar depois (registrar divida)" : "Selecione" %></option>
-        <option value="M-Pesa">M-Pesa</option>
-        <option value="e-Mola">e-Mola</option>
-        <option value="Cartao">Cartao</option>
-      </select>
-    </label>
-    <button class="btn" type="submit"><%= clientType === "postpaid" ? "Confirmar reserva" : "Confirmar reserva e pagar" %></button>
-  </form>
+  <div class="checkout-grid">
+    <aside class="card checkout-summary">
+      <h3>Servicos selecionados</h3>
+      <% if (cartSummary.lines.length === 0) { %>
+        <p>Carrinho vazio.</p>
+      <% } else { %>
+        <ul class="checkout-lines">
+          <% cartSummary.lines.forEach(line => { %>
+            <li class="checkout-line">
+              <div class="checkout-line-main">
+                <span><%= line.name %></span>
+                <small>x<%= line.qty %></small>
+              </div>
+              <strong><%= line.subtotal %> MT</strong>
+            </li>
+          <% }) %>
+        </ul>
+        <div class="checkout-totals">
+          <p><strong>Total:</strong> <%= cartSummary.totalAmount %> MT</p>
+          <p><strong>Duracao estimada:</strong> <%= cartSummary.totalDuration %> min</p>
+        </div>
+      <% } %>
+    </aside>
+
+    <section class="card checkout-form-card">
+      <h3>Dados da reserva</h3>
+      <form method="post" action="/cliente/reservas" class="form checkout-form">
+        <label>Profissional
+          <select name="staffId" required>
+            <option value="">Selecione</option>
+            <% staff.forEach(p => { %>
+              <option value="<%= p.id %>"><%= p.name %> - <%= p.specialty %></option>
+            <% }) %>
+          </select>
+        </label>
+        <label>Data
+          <input type="date" name="date" min="<%= today %>" required />
+        </label>
+        <label>Hora de inicio
+          <select name="time" required>
+            <option value="">Selecione</option>
+            <option>08:00</option>
+            <option>09:00</option>
+            <option>10:00</option>
+            <option>11:00</option>
+            <option>12:00</option>
+            <option>14:00</option>
+            <option>15:00</option>
+            <option>16:00</option>
+            <option>17:00</option>
+          </select>
+        </label>
+
+        <fieldset class="payment-group">
+          <legend>Metodo de pagamento</legend>
+          <div class="payment-options">
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="M-Pesa" <%= clientType === "prepaid" ? "required" : "" %> />
+              <span class="payment-option-body">
+                <img src="/images/payments/mpesalogo.png" alt="Logo M-Pesa" class="payment-logo" />
+                <span class="payment-text">
+                  <strong>M-Pesa</strong>
+                  <small>Pagamento rapido por carteira movel</small>
+                </span>
+              </span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="e-Mola" />
+              <span class="payment-option-body">
+                <img src="/images/payments/emolalogo.png" alt="Logo e-Mola" class="payment-logo" />
+                <span class="payment-text">
+                  <strong>e-Mola</strong>
+                  <small>Transferencia segura via telefone</small>
+                </span>
+              </span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="Cartao" />
+              <span class="payment-option-body">
+                <span class="payment-card-icon" aria-hidden="true"><i class="bi bi-credit-card-2-front"></i></span>
+                <span class="payment-text">
+                  <strong>Cartao</strong>
+                  <small>Debito ou credito</small>
+                </span>
+              </span>
+            </label>
+            <% if (clientType === "postpaid") { %>
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="Pagar depois (divida)" checked />
+                <span class="payment-option-body">
+                  <span class="payment-card-icon" aria-hidden="true"><i class="bi bi-journal-text"></i></span>
+                  <span class="payment-text">
+                    <strong>Pagar depois</strong>
+                    <small>Registrar como divida do cliente</small>
+                  </span>
+                </span>
+              </label>
+            <% } %>
+          </div>
+        </fieldset>
+
+        <button class="btn checkout-submit" type="submit"><%= clientType === "postpaid" ? "Confirmar reserva" : "Confirmar reserva e pagar" %></button>
+      </form>
+    </section>
+  </div>
 </section>
 <%- include("../partials/footer") %>

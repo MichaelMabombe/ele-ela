@@ -1,14 +1,22 @@
 <%- include("../partials/header") %>
 <section class="auth auth-login">
   <% if (mode === "choice") { %>
-    <div class="auth-head">
+    <div class="auth-head auth-head-choice">
       <p class="kicker">Comecar reserva</p>
       <h1>Criar uma reserva</h1>
-      <p class="muted">Para continuar, crie a sua conta ou entre na conta existente.</p>
+      <p class="muted">Escolha como deseja continuar no sistema.</p>
     </div>
-    <div class="form">
-      <a class="btn auth-submit" href="/register">Criar conta</a>
-      <a class="btn btn-outline auth-submit" href="/login?mode=signin">Ja tenho conta</a>
+    <div class="auth-choice-grid">
+      <a class="auth-choice-card auth-choice-primary" href="/register">
+        <span class="auth-choice-icon" aria-hidden="true"><i class="bi bi-person-plus"></i></span>
+        <span class="auth-choice-title">Criar conta</span>
+        <span class="auth-choice-desc">Cadastro rapido para fazer a primeira reserva.</span>
+      </a>
+      <a class="auth-choice-card auth-choice-secondary" href="/login?mode=signin">
+        <span class="auth-choice-icon" aria-hidden="true"><i class="bi bi-box-arrow-in-right"></i></span>
+        <span class="auth-choice-title">Ja tenho conta</span>
+        <span class="auth-choice-desc">Entrar com email e senha para continuar.</span>
+      </a>
     </div>
   <% } else { %>
     <div class="auth-head">

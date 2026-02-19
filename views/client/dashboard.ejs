@@ -11,11 +11,22 @@
   <h2>Servicos do salao</h2>
   <div class="service-grid">
     <% (servicesCatalog || []).forEach(service => { %>
-      <article class="service-card">
+      <article
+        class="service-card service-card-clickable"
+        data-service-trigger
+        data-service-id="<%= service.id %>"
+        data-service-name="<%= service.name %>"
+        data-service-price="<%= service.price %>"
+        data-service-duration="<%= service.duration %>"
+        data-service-description="<%= service.description || '' %>"
+        data-service-image="<%= service.image %>"
+        data-service-gallery="<%= (service.gallery || []).join('||') %>"
+      >
         <img src="<%= service.image %>" alt="<%= service.name %>" class="service-thumb" />
         <div class="service-body">
           <h3><%= service.name %></h3>
           <p><strong><%= service.price %> MT</strong> - <%= service.duration %> min</p>
+          <button class="btn btn-outline service-detail-btn" type="button" data-service-open>Ver detalhes</button>
           <form method="post" action="/cliente/carrinho/add">
             <input type="hidden" name="serviceId" value="<%= service.id %>" />
             <button class="btn" type="submit">Adicionar ao carrinho</button>
@@ -25,4 +36,162 @@
     <% }) %>
   </div>
 </section>
+
+<div id="service-detail-modal" class="service-modal" hidden>
+  <div class="service-modal-backdrop" data-service-close></div>
+  <section class="service-modal-card" role="dialog" aria-modal="true" aria-labelledby="service-modal-title" tabindex="-1">
+    <header class="service-modal-header">
+      <div>
+        <p class="kicker service-modal-kicker">Detalhes do servico</p>
+        <h3 id="service-modal-title">Servico</h3>
+      </div>
+      <div class="service-modal-actions">
+        <button type="button" class="service-window-btn" data-service-minimize title="Minimizar">
+          <i class="bi bi-dash-lg" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="service-window-btn" data-service-close title="Fechar">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+    </header>
+    <div class="service-modal-body">
+      <img id="service-modal-main-image" class="service-modal-main-image" src="" alt="" />
+      <div id="service-modal-gallery" class="service-modal-gallery"></div>
+      <div class="service-modal-info">
+        <p id="service-modal-meta" class="service-modal-meta"></p>
+        <p id="service-modal-description" class="service-modal-description"></p>
+      </div>
+      <form method="post" action="/cliente/carrinho/add">
+        <input id="service-modal-id" type="hidden" name="serviceId" value="" />
+        <button class="btn auth-submit" type="submit">Adicionar ao carrinho</button>
+      </form>
+    </div>
+  </section>
+</div>
+
+<script>
+  (function () {
+    var modal = document.getElementById("service-detail-modal");
+    if (!modal) return;
+    var modalCard = modal.querySelector(".service-modal-card");
+    var titleEl = document.getElementById("service-modal-title");
+    var metaEl = document.getElementById("service-modal-meta");
+    var descEl = document.getElementById("service-modal-description");
+    var mainImageEl = document.getElementById("service-modal-main-image");
+    var galleryEl = document.getElementById("service-modal-gallery");
+    var serviceIdEl = document.getElementById("service-modal-id");
+    var closeEls = modal.querySelectorAll("[data-service-close]");
+    var minimizeBtn = modal.querySelector("[data-service-minimize]");
+    var triggers = document.querySelectorAll("[data-service-trigger]");
+    var activeTrigger = null;
+    var isMinimized = false;
+
+    function parseGallery(value) {
+      return String(value || "")
+        .split("||")
+        .map(function (item) { return item.trim(); })
+        .filter(Boolean);
+    }
+
+    function setMainImage(src, alt) {
+      mainImageEl.src = src || "";
+      mainImageEl.alt = alt || "Imagem do servico";
+    }
+
+    function renderGallery(images, serviceName) {
+      galleryEl.innerHTML = "";
+      images.slice(0, 6).forEach(function (src, index) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "service-thumb-option" + (index === 0 ? " is-active" : "");
+        btn.innerHTML = '<img src="' + src + '" alt="Foto ' + (index + 1) + ' de ' + serviceName + '" />';
+        btn.addEventListener("click", function () {
+          setMainImage(src, serviceName);
+          galleryEl.querySelectorAll(".service-thumb-option").forEach(function (item) {
+            item.classList.remove("is-active");
+          });
+          btn.classList.add("is-active");
+        });
+        galleryEl.appendChild(btn);
+      });
+    }
+
+    function openModalFromTrigger(trigger) {
+      var serviceName = trigger.dataset.serviceName || "Servico";
+      var price = trigger.dataset.servicePrice || "0";
+      var duration = trigger.dataset.serviceDuration || "0";
+      var description = trigger.dataset.serviceDescription || "";
+      var serviceId = trigger.dataset.serviceId || "";
+      var coverImage = trigger.dataset.serviceImage || "";
+      var gallery = parseGallery(trigger.dataset.serviceGallery);
+      var images = [coverImage].concat(gallery).filter(function (value, idx, arr) {
+        return value && arr.indexOf(value) === idx;
+      });
+
+      titleEl.textContent = serviceName;
+      metaEl.textContent = price + " MT - " + duration + " min";
+      descEl.textContent = description;
+      serviceIdEl.value = serviceId;
+      setMainImage(images[0] || coverImage, serviceName);
+      renderGallery(images, serviceName);
+      activeTrigger = trigger;
+      isMinimized = false;
+      modal.classList.remove("is-minimized");
+      modal.hidden = false;
+      document.body.classList.add("service-modal-open");
+    }
+
+    function closeModal() {
+      modal.hidden = true;
+      modal.classList.remove("is-minimized");
+      document.body.classList.remove("service-modal-open");
+      isMinimized = false;
+      activeTrigger = null;
+    }
+
+    function toggleMinimize() {
+      isMinimized = !isMinimized;
+      modal.classList.toggle("is-minimized", isMinimized);
+      if (isMinimized) document.body.classList.remove("service-modal-open");
+      else document.body.classList.add("service-modal-open");
+      if (!isMinimized && activeTrigger) {
+        modalCard.focus();
+      }
+    }
+
+    triggers.forEach(function (trigger) {
+      trigger.tabIndex = 0;
+      trigger.setAttribute("role", "button");
+      trigger.addEventListener("click", function (event) {
+        if (event.target.closest("form") || event.target.closest("[data-service-open]")) return;
+        openModalFromTrigger(trigger);
+      });
+      trigger.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openModalFromTrigger(trigger);
+        }
+      });
+    });
+
+    document.querySelectorAll("[data-service-open]").forEach(function (btn) {
+      btn.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var trigger = btn.closest("[data-service-trigger]");
+        if (trigger) openModalFromTrigger(trigger);
+      });
+    });
+
+    closeEls.forEach(function (item) {
+      item.addEventListener("click", closeModal);
+    });
+    if (minimizeBtn) minimizeBtn.addEventListener("click", toggleMinimize);
+
+    document.addEventListener("keydown", function (event) {
+      if (modal.hidden) return;
+      if (event.key === "Escape") closeModal();
+    });
+  })();
+</script>
 <%- include("../partials/footer") %>
