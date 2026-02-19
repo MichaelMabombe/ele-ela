@@ -733,47 +733,127 @@ app.get("/admin/clientes/pdf", requireRole("admin"), (req, res) => {
     .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
 
   const doc = new PDFDocument({ margin: 40, size: "A4" });
+  const pageWidth = doc.page.width;
+  const pageHeight = doc.page.height;
+  const margin = 40;
+  const contentWidth = pageWidth - margin * 2;
+  const headerBandHeight = 96;
+  const tableTopY = 228;
+  const colX = { name: margin + 8, email: 220, phone: 388, type: 468 };
+  const rowHeight = 22;
+  const logoPathCandidates = [
+    path.join(__dirname, "elaeelelogo.png"),
+    path.join(__dirname, "eleeelalogo.jpg"),
+    path.join(__dirname, "public", "images", "logo.jpg"),
+  ];
+  const logoPath = logoPathCandidates.find((candidate) => fs.existsSync(candidate));
+  const generatedAt = new Date().toISOString().slice(0, 16).replace("T", " ");
+  const totalClients = clients.length;
+  const prepaidCount = clients.filter((c) => c.clientType !== "postpaid").length;
+  const postpaidCount = clients.filter((c) => c.clientType === "postpaid").length;
+
   const safeDate = new Date().toISOString().slice(0, 10);
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader("Content-Disposition", `attachment; filename=clientes-${safeDate}.pdf`);
   doc.pipe(res);
 
-  doc.fontSize(18).text("Lista de clientes - Ela&Ele", { align: "left" });
-  doc.moveDown(0.4);
-  doc.fontSize(10).fillColor("#555").text(`Gerado em: ${new Date().toISOString().slice(0, 16).replace("T", " ")}`);
-  if (searchQuery) doc.text(`Filtro: ${searchQuery}`);
-  doc.text(`Total: ${clients.length}`);
-  doc.moveDown(0.8);
-  doc.fillColor("#000");
+  const drawMainHeader = () => {
+    doc.save();
+    doc.roundedRect(margin, margin, contentWidth, headerBandHeight, 16).fill("#f7e8e8");
+    doc.restore();
 
-  const colX = { name: 40, email: 210, phone: 380, type: 470 };
-  const rowHeight = 18;
-  const drawHeader = () => {
-    const y = doc.y;
-    doc.font("Helvetica-Bold").fontSize(10);
-    doc.text("Nome", colX.name, y, { width: 160 });
-    doc.text("Email", colX.email, y, { width: 160 });
-    doc.text("Telefone", colX.phone, y, { width: 80 });
-    doc.text("Tipo", colX.type, y, { width: 90 });
-    doc.moveDown(0.8);
-    doc.font("Helvetica");
+    if (logoPath) {
+      doc.image(logoPath, margin + 16, margin + 13, { fit: [68, 68], align: "left", valign: "center" });
+    }
+
+    doc.fillColor("#5e2b3b").font("Helvetica-Bold").fontSize(20);
+    doc.text("Relatorio de Clientes", margin + 98, margin + 20, { width: 300 });
+    doc.font("Helvetica").fontSize(10).fillColor("#6b6b6b");
+    doc.text(`Gerado em: ${generatedAt}`, margin + 98, margin + 50, { width: 280 });
+    doc.text("Salao Ela&Ele", margin + 98, margin + 64, { width: 280 });
+
+    if (searchQuery) {
+      doc.font("Helvetica-Bold").fillColor("#5e2b3b");
+      doc.text(`Filtro: ${searchQuery}`, margin + 360, margin + 24, { width: 170, align: "right" });
+    }
   };
 
-  drawHeader();
+  const drawSummaryCard = (x, y, width, label, value) => {
+    doc.save();
+    doc.roundedRect(x, y, width, 54, 10).fill("#fff8f8");
+    doc.restore();
+    doc.save();
+    doc.roundedRect(x, y, width, 54, 10).lineWidth(0.6).strokeColor("#edcdd6").stroke();
+    doc.restore();
+
+    doc.fillColor("#7b4b5d").font("Helvetica").fontSize(9).text(label, x + 12, y + 10, { width: width - 24 });
+    doc.fillColor("#3d1f2a").font("Helvetica-Bold").fontSize(16).text(String(value), x + 12, y + 24, {
+      width: width - 24,
+    });
+  };
+
+  const drawTableHeader = () => {
+    doc.save();
+    doc.roundedRect(margin, tableTopY, contentWidth, 24, 6).fill("#5e2b3b");
+    doc.restore();
+
+    const y = tableTopY + 7;
+    doc.font("Helvetica-Bold").fontSize(10).fillColor("#ffffff");
+    doc.text("Nome", colX.name, y, { width: 170, lineBreak: false });
+    doc.text("Email", colX.email, y, { width: 160, lineBreak: false });
+    doc.text("Telefone", colX.phone, y, { width: 70, lineBreak: false });
+    doc.text("Tipo", colX.type, y, { width: 90, lineBreak: false });
+    doc.fillColor("#222222").font("Helvetica");
+  };
+
+  const drawPageTemplate = () => {
+    drawMainHeader();
+    const cardWidth = (contentWidth - 20) / 3;
+    const summaryY = margin + headerBandHeight + 14;
+    drawSummaryCard(margin, summaryY, cardWidth, "Total de clientes", totalClients);
+    drawSummaryCard(margin + cardWidth + 10, summaryY, cardWidth, "Clientes pre-pago", prepaidCount);
+    drawSummaryCard(margin + (cardWidth + 10) * 2, summaryY, cardWidth, "Clientes pos-pago", postpaidCount);
+    drawTableHeader();
+    doc.y = tableTopY + 30;
+  };
+
+  const drawFooter = () => {
+    const footerText = `Ela&Ele - Pagina ${doc.page.number}`;
+    doc.font("Helvetica").fontSize(8).fillColor("#9a9a9a");
+    doc.text(footerText, margin, pageHeight - 28, { width: contentWidth, align: "right", lineBreak: false });
+  };
+
+  drawPageTemplate();
   clients.forEach((client) => {
-    if (doc.y > 760) {
+    if (doc.y + rowHeight > pageHeight - 46) {
+      drawFooter();
       doc.addPage();
-      drawHeader();
+      drawPageTemplate();
     }
+
     const y = doc.y;
-    doc.fontSize(9);
-    doc.text(String(client.name || "-"), colX.name, y, { width: 160, ellipsis: true });
-    doc.text(String(client.email || "-"), colX.email, y, { width: 160, ellipsis: true });
-    doc.text(String(client.phone || "-"), colX.phone, y, { width: 80, ellipsis: true });
-    doc.text(client.clientType === "postpaid" ? "Pos-pago" : "Pre-pago", colX.type, y, { width: 90 });
+    const isEven = Math.floor((y - (tableTopY + 30)) / rowHeight) % 2 === 0;
+    if (isEven) {
+      doc.save();
+      doc.rect(margin, y - 2, contentWidth, rowHeight).fill("#fdf6f7");
+      doc.restore();
+    }
+
+    doc.fontSize(9).fillColor("#222222");
+    doc.text(String(client.name || "-"), colX.name, y + 5, { width: 170, ellipsis: true, lineBreak: false });
+    doc.text(String(client.email || "-"), colX.email, y + 5, { width: 160, ellipsis: true, lineBreak: false });
+    doc.text(String(client.phone || "-"), colX.phone, y + 5, { width: 70, ellipsis: true, lineBreak: false });
+    doc.text(client.clientType === "postpaid" ? "Pos-pago" : "Pre-pago", colX.type, y + 5, {
+      width: 90,
+      lineBreak: false,
+    });
+    doc.save();
+    doc.moveTo(margin, y + rowHeight - 1).lineTo(margin + contentWidth, y + rowHeight - 1).lineWidth(0.3).stroke("#edd5dc");
+    doc.restore();
     doc.y = y + rowHeight;
   });
 
+  drawFooter();
   doc.end();
 });
 
