@@ -55,16 +55,27 @@
       </div>
     </header>
     <div class="service-modal-body">
-      <img id="service-modal-main-image" class="service-modal-main-image" src="" alt="" />
-      <div id="service-modal-gallery" class="service-modal-gallery"></div>
-      <div class="service-modal-info">
-        <p id="service-modal-meta" class="service-modal-meta"></p>
-        <p id="service-modal-description" class="service-modal-description"></p>
+      <div class="service-modal-content-grid">
+        <div>
+          <img id="service-modal-main-image" class="service-modal-main-image" src="" alt="" />
+          <div id="service-modal-gallery" class="service-modal-gallery"></div>
+        </div>
+        <div class="service-modal-info-panel">
+          <div class="service-modal-info">
+            <p id="service-modal-meta" class="service-modal-meta"></p>
+            <p id="service-modal-description" class="service-modal-description"></p>
+            <ul class="service-modal-points">
+              <li><i class="bi bi-check2-circle" aria-hidden="true"></i> Profissionais qualificados</li>
+              <li><i class="bi bi-check2-circle" aria-hidden="true"></i> Atendimento com hora marcada</li>
+              <li><i class="bi bi-check2-circle" aria-hidden="true"></i> Confirmacao imediata no sistema</li>
+            </ul>
+          </div>
+          <form method="post" action="/cliente/carrinho/add">
+            <input id="service-modal-id" type="hidden" name="serviceId" value="" />
+            <button class="btn auth-submit" type="submit">Adicionar ao carrinho</button>
+          </form>
+        </div>
       </div>
-      <form method="post" action="/cliente/carrinho/add">
-        <input id="service-modal-id" type="hidden" name="serviceId" value="" />
-        <button class="btn auth-submit" type="submit">Adicionar ao carrinho</button>
-      </form>
     </div>
   </section>
 </div>

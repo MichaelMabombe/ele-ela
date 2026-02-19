@@ -131,31 +131,21 @@ const getServiceDescription = (serviceName) => {
   return "Servico realizado por profissionais do Ela&Ele com atendimento atencioso e foco na sua experiencia.";
 };
 
-const getServiceGallery = (serviceName, index, primaryImage, highlightImages) => {
+const getServiceGallery = (serviceName, primaryImage) => {
   const name = String(serviceName || "").toLowerCase();
-  const themed = [];
-  if (name.includes("limpeza") || name.includes("pele") || name.includes("facial")) {
-    themed.push("/images/services/limpezafacial.jpg", "/images/services/pele.jpg");
-  }
-  if (name.includes("manicure") || name.includes("pedicure") || name.includes("sobrancelha")) {
-    themed.push("/images/services/manicure.jpg");
-  }
-  if (name.includes("femin") || name.includes("escova") || name.includes("hidrat") || name.includes("botox")) {
-    themed.push("/images/services/corte-feminino.jpg");
-  }
-  if (name.includes("mascul") || name.includes("barba")) {
-    themed.push("/images/services/corte-masculino.jpg");
-  }
-  themed.push("/images/services/banner-servico.jpg", "/images/services/default-1.jpg", "/images/services/default-2.jpg");
+  const generic = ["/images/services/banner-servico.jpg", "/images/services/default-1.jpg", "/images/services/default-2.jpg"];
+  const facial = ["/images/services/limpezafacial.jpg", "/images/services/pele.jpg", "/images/services/banner-servico.jpg"];
+  const nails = ["/images/services/manicure.jpg", "/images/services/default-1.jpg", "/images/services/banner-servico.jpg"];
+  const womenHair = ["/images/services/corte-feminino.jpg", "/images/services/massagem.jpg", "/images/services/default-1.jpg"];
+  const menHair = ["/images/services/corte-masculino.jpg", "/images/services/banner-servico.jpg", "/images/services/default-2.jpg"];
 
-  const highlights = [];
-  if (Array.isArray(highlightImages) && highlightImages.length > 0) {
-    for (let i = 0; i < 3; i += 1) {
-      highlights.push(highlightImages[(index + i) % highlightImages.length]);
-    }
-  }
+  let themed = generic;
+  if (name.includes("limpeza") || name.includes("pele") || name.includes("facial")) themed = facial;
+  else if (name.includes("manicure") || name.includes("pedicure") || name.includes("sobrancelha")) themed = nails;
+  else if (name.includes("femin") || name.includes("escova") || name.includes("hidrat") || name.includes("botox") || name.includes("progressiva")) themed = womenHair;
+  else if (name.includes("mascul") || name.includes("barba") || name.includes("tranca") || name.includes("dread")) themed = menHair;
 
-  return [primaryImage, ...themed, ...highlights].filter((img, idx, arr) => img && arr.indexOf(img) === idx).slice(0, 6);
+  return [primaryImage, ...themed].filter((img, idx, arr) => img && arr.indexOf(img) === idx).slice(0, 4);
 };
 
 const buildCartSummary = (db, cart) => {
@@ -300,12 +290,11 @@ app.get("/cliente/dashboard", requireRole("client"), (req, res) => {
   const db = readDb();
   const cart = getSessionCart(req);
   const cartSummary = buildCartSummary(db, cart);
-  const highlightImages = getHomeHighlightImages();
   const servicesCatalog = db.services.map((service, index) => ({
     ...service,
     image: getServiceImage(service.name, index),
     description: getServiceDescription(service.name),
-    gallery: getServiceGallery(service.name, index, getServiceImage(service.name, index), highlightImages),
+    gallery: getServiceGallery(service.name, getServiceImage(service.name, index)),
   }));
   const reservations = db.reservations
     .filter((r) => r.clientId === req.session.user.id)

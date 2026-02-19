@@ -49,9 +49,10 @@
   </section>
 
   <div class="table-wrap">
-    <table>
+    <table class="services-admin-table">
       <thead>
         <tr>
+          <th>#</th>
           <th>Nome</th>
           <th>Preco</th>
           <th>Duracao</th>
@@ -59,11 +60,12 @@
         </tr>
       </thead>
       <tbody>
-      <% services.forEach(s => { %>
+      <% services.forEach((s, index) => { %>
         <tr class="service-row" data-service-name="<%= String(s.name || '').toLowerCase() %>">
-          <td><%= s.name %></td>
-          <td><%= s.price %> MT</td>
-          <td><%= s.duration %> min</td>
+          <td class="service-order-cell"><%= index + 1 %></td>
+          <td><span class="service-name-strong"><%= s.name %></span></td>
+          <td><span class="service-value-chip service-price-chip"><i class="bi bi-cash-coin icon" aria-hidden="true"></i><%= s.price %> MT</span></td>
+          <td><span class="service-value-chip service-duration-chip"><i class="bi bi-clock icon" aria-hidden="true"></i><%= s.duration %> min</span></td>
           <td class="service-actions-cell">
             <button class="btn btn-sm btn-outline btn-icon toggle-edit-service" type="button" data-target="edit-<%= s.id %>">
               <i class="bi bi-pencil-square icon" aria-hidden="true"></i>Editar
