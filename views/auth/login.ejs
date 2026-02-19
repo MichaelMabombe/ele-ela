@@ -1,0 +1,43 @@
+<%- include("../partials/header") %>
+<section class="auth auth-login">
+  <div class="auth-head">
+    <p class="kicker">Acesso seguro</p>
+    <h1>Entrar no sistema</h1>
+    <p class="muted">Use o seu email e senha para continuar.</p>
+  </div>
+  <form method="post" action="/login" class="form">
+    <label>Email</label>
+    <div class="input-with-icon">
+      <i class="bi bi-envelope icon" aria-hidden="true"></i>
+      <input type="email" name="email" autocomplete="username" placeholder="seuemail@exemplo.com" required />
+    </div>
+
+    <label>Senha
+      <div class="input-with-icon password-field">
+        <i class="bi bi-lock icon" aria-hidden="true"></i>
+        <input id="login-password" type="password" name="password" autocomplete="current-password" placeholder="Digite sua senha" required />
+        <button id="toggle-password" type="button" class="password-toggle" aria-label="Mostrar senha">
+          <i class="bi bi-eye" aria-hidden="true"></i>
+        </button>
+      </div>
+    </label>
+    <button class="btn auth-submit" type="submit">Entrar</button>
+  </form>
+  <p class="auth-alt">Ainda nao tem conta? <a href="/register">Criar conta</a></p>
+</section>
+<script>
+  (function () {
+    var passwordInput = document.getElementById("login-password");
+    var toggleBtn = document.getElementById("toggle-password");
+    if (!passwordInput || !toggleBtn) return;
+    toggleBtn.addEventListener("click", function () {
+      var showing = passwordInput.type === "text";
+      passwordInput.type = showing ? "password" : "text";
+      toggleBtn.setAttribute("aria-label", showing ? "Mostrar senha" : "Ocultar senha");
+      toggleBtn.innerHTML = showing
+        ? '<i class="bi bi-eye" aria-hidden="true"></i>'
+        : '<i class="bi bi-eye-slash" aria-hidden="true"></i>';
+    });
+  })();
+</script>
+<%- include("../partials/footer") %>

@@ -1,0 +1,139 @@
+<%- include("../partials/header") %>
+<% const formatMoney = (value) => `${Number(value || 0).toLocaleString("pt-MZ")} MT`; %>
+<% const statusLabel = { pending: "Pendente", confirmed: "Confirmada", completed: "Concluida", cancelled: "Cancelada" }; %>
+<section class="admin-main">
+    <section class="admin-hero card admin-page-header">
+      <div>
+        <h1><i class="bi bi-speedometer2 icon" aria-hidden="true"></i> Dashboard Admin</h1>
+        <p>Resumo rapido de reservas, operacao e vendas.</p>
+      </div>
+      <div class="quick-links admin-page-actions">
+        <a class="btn btn-icon" href="/admin/agenda"><i class="bi bi-calendar3 icon" aria-hidden="true"></i>Ver agenda</a>
+        <a class="btn btn-outline btn-icon" href="/admin/clientes"><i class="bi bi-people icon" aria-hidden="true"></i>Clientes</a>
+        <a class="btn btn-outline btn-icon" href="/admin/financeiro"><i class="bi bi-cash-stack icon" aria-hidden="true"></i>Financeiro</a>
+      </div>
+    </section>
+
+    <section class="admin-stats-grid admin-stats-grid-ref">
+      <article class="admin-stat admin-stat-blue">
+        <p class="stat-label"><i class="bi bi-people icon" aria-hidden="true"></i> Total Customer</p>
+        <p class="stat-value"><%= totalClients %></p>
+      </article>
+      <article class="admin-stat admin-stat-pink">
+        <p class="stat-label"><i class="bi bi-calendar2-check icon" aria-hidden="true"></i> Total Appointment</p>
+        <p class="stat-value"><%= totals.total %></p>
+      </article>
+      <article class="admin-stat admin-stat-orange">
+        <p class="stat-label"><i class="bi bi-check2-circle icon" aria-hidden="true"></i> Total Accepted Apt</p>
+        <p class="stat-value"><%= totals.confirmed + totals.completed %></p>
+      </article>
+      <article class="admin-stat admin-stat-green">
+        <p class="stat-label"><i class="bi bi-x-circle icon" aria-hidden="true"></i> Total Rejected Apt</p>
+        <p class="stat-value"><%= totals.cancelled %></p>
+      </article>
+      <article class="admin-stat admin-stat-magenta">
+        <p class="stat-label"><i class="bi bi-grid icon" aria-hidden="true"></i> Total Services</p>
+        <p class="stat-value"><%= totalServices %></p>
+      </article>
+      <article class="admin-stat admin-stat-navy">
+        <p class="stat-label"><i class="bi bi-clock-history icon" aria-hidden="true"></i> Today Appointment</p>
+        <p class="stat-value"><%= todayReservations %></p>
+      </article>
+      <article class="admin-stat admin-stat-gold">
+        <p class="stat-label"><i class="bi bi-wallet2 icon" aria-hidden="true"></i> Total Sales</p>
+        <p class="stat-value"><%= formatMoney(revenue.total) %></p>
+      </article>
+      <article class="admin-stat admin-stat-gray">
+        <p class="stat-label"><i class="bi bi-graph-up-arrow icon" aria-hidden="true"></i> This Month Sale</p>
+        <p class="stat-value"><%= formatMoney(revenue.monthly) %></p>
+      </article>
+    </section>
+
+    <section class="card">
+      <div class="admin-insights">
+        <article class="insight-item">
+          <p class="muted">Vendas de hoje</p>
+          <h3><%= formatMoney(todayRevenue) %></h3>
+        </article>
+        <article class="insight-item">
+          <p class="muted">Taxa de aceitacao</p>
+          <h3><%= acceptanceRate %>%</h3>
+        </article>
+        <article class="insight-item">
+          <p class="muted">Taxa de conclusao</p>
+          <h3><%= completionRate %>%</h3>
+        </article>
+      </div>
+
+      <div class="title-row">
+        <h2>New Appointments</h2>
+        <a class="btn btn-outline btn-icon" href="/admin/agenda"><i class="bi bi-arrow-right icon" aria-hidden="true"></i>Ver todos</a>
+      </div>
+      <div class="status-filters">
+        <a href="/admin/dashboard?status=all" class="<%= selectedStatus === 'all' ? 'active' : '' %>">Todos</a>
+        <a href="/admin/dashboard?status=pending" class="<%= selectedStatus === 'pending' ? 'active' : '' %>">Pendentes</a>
+        <a href="/admin/dashboard?status=confirmed" class="<%= selectedStatus === 'confirmed' ? 'active' : '' %>">Confirmadas</a>
+        <a href="/admin/dashboard?status=completed" class="<%= selectedStatus === 'completed' ? 'active' : '' %>">Concluidas</a>
+        <a href="/admin/dashboard?status=cancelled" class="<%= selectedStatus === 'cancelled' ? 'active' : '' %>">Canceladas</a>
+      </div>
+      <% if (recentReservations.length === 0) { %>
+        <p class="muted">Nenhuma reserva encontrada para o filtro selecionado.</p>
+      <% } else { %>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Cliente</th>
+                <th>Servico</th>
+                <th>Profissional</th>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Status</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% recentReservations.forEach((r, i) => { %>
+                <% const customer = usersById[r.clientId]; %>
+                <% const professional = prosById[r.staffId]; %>
+                <% const firstServiceId = r.serviceId || (Array.isArray(r.serviceIds) ? r.serviceIds[0] : null); %>
+                <% const firstService = firstServiceId ? servicesById[firstServiceId] : null; %>
+                <tr>
+                  <td><%= i + 1 %></td>
+                  <td><%= customer ? customer.name : "Cliente removido" %></td>
+                  <td><%= firstService ? firstService.name : "Servico removido" %></td>
+                  <td><%= professional ? professional.name : "Profissional removido" %></td>
+                  <td><%= r.date %></td>
+                  <td><%= r.time %></td>
+                  <td><span class="badge badge-status badge-status-<%= r.status %>"><%= statusLabel[r.status] || r.status %></span></td>
+                  <td>
+                    <div class="admin-row-actions">
+                      <% if (r.status === "pending") { %>
+                        <form method="post" action="/admin/reservas/<%= r.id %>/status">
+                          <input type="hidden" name="status" value="confirmed" />
+                          <button class="btn btn-sm" type="submit">Confirmar</button>
+                        </form>
+                        <form method="post" action="/admin/reservas/<%= r.id %>/status">
+                          <input type="hidden" name="status" value="cancelled" />
+                          <button class="btn btn-sm btn-danger" type="submit">Cancelar</button>
+                        </form>
+                      <% } else if (r.status === "confirmed") { %>
+                        <form method="post" action="/admin/reservas/<%= r.id %>/status">
+                          <input type="hidden" name="status" value="completed" />
+                          <button class="btn btn-sm" type="submit">Concluir</button>
+                        </form>
+                      <% } else { %>
+                        <a class="btn btn-sm btn-outline" href="/admin/agenda">Detalhes</a>
+                      <% } %>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+    </section>
+</section>
+<%- include("../partials/footer") %>

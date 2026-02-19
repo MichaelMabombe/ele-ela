@@ -1,0 +1,114 @@
+<!DOCTYPE html><html lang="pt"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ele&amp;Ela Salon</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="/" class="logo">Ele<span>&amp;</span>Ela</a>
+      <nav class="nav">
+        
+          <a href="/cliente/dashboard">Minha area</a>
+          <a href="/cliente/carrinho">Carrinho (0)</a>
+          <a href="/cliente/reservas/nova">Nova reserva</a>
+          <form action="/logout" method="post">
+            <button class="link-btn" type="submit">Sair</button>
+          </form>
+        
+      </nav>
+    </div>
+  </header>
+  <main class="container page">
+    
+
+<section class="title-row">
+  <h1>Dashboard do Cliente</h1>
+  <a class="btn" href="/cliente/carrinho">Carrinho (0)</a>
+</section>
+
+<section>
+  <h2>Servicos do salao</h2>
+  <div class="service-grid">
+    
+      <article class="service-card">
+        <img src="/images/services/corte-feminino.jpg" alt="Corte Feminino" class="service-thumb">
+        <div class="service-body">
+          <h3>Corte Feminino</h3>
+          <p><strong>900 MT</strong> - 60 min</p>
+          <form method="post" action="/cliente/carrinho/add">
+            <input type="hidden" name="serviceId" value="57f61578-2c1f-47de-a383-4e9c82bcf327">
+            <button class="btn" type="submit">Adicionar ao carrinho</button>
+          </form>
+        </div>
+      </article>
+    
+      <article class="service-card">
+        <img src="/images/services/corte-masculino.jpg" alt="Corte Masculino" class="service-thumb">
+        <div class="service-body">
+          <h3>Corte Masculino</h3>
+          <p><strong>600 MT</strong> - 45 min</p>
+          <form method="post" action="/cliente/carrinho/add">
+            <input type="hidden" name="serviceId" value="a1a8793f-21f2-4b0f-8019-c92cbf8e9656">
+            <button class="btn" type="submit">Adicionar ao carrinho</button>
+          </form>
+        </div>
+      </article>
+    
+      <article class="service-card">
+        <img src="/images/services/manicure.jpg" alt="Manicure + Pedicure" class="service-thumb">
+        <div class="service-body">
+          <h3>Manicure + Pedicure</h3>
+          <p><strong>1200 MT</strong> - 75 min</p>
+          <form method="post" action="/cliente/carrinho/add">
+            <input type="hidden" name="serviceId" value="10beb2cd-9249-409c-9a85-532943c3066a">
+            <button class="btn" type="submit">Adicionar ao carrinho</button>
+          </form>
+        </div>
+      </article>
+    
+      <article class="service-card">
+        <img src="/images/services/pele.jpg" alt="Limpeza de Pele" class="service-thumb">
+        <div class="service-body">
+          <h3>Limpeza de Pele</h3>
+          <p><strong>1800 MT</strong> - 90 min</p>
+          <form method="post" action="/cliente/carrinho/add">
+            <input type="hidden" name="serviceId" value="bd9012c6-3c6a-4dda-beff-740f486f9109">
+            <button class="btn" type="submit">Adicionar ao carrinho</button>
+          </form>
+        </div>
+      </article>
+    
+  </div>
+</section>
+
+<section>
+  <h2>Minhas reservas</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Servicos</th>
+          <th>Profissional</th>
+          <th>Data</th>
+          <th>Hora</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Acao</th>
+        </tr>
+      </thead>
+      <tbody>
+      
+        <tr><td colspan="7">Nenhuma reserva ainda.</td></tr>
+      
+      
+      </tbody>
+    </table>
+  </div>
+</section>
+  </main>
+
+
+
+</body></html>

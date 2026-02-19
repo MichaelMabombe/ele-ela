@@ -1,0 +1,50 @@
+<%- include("../partials/header") %>
+<section class="admin-page">
+  <header class="admin-page-header">
+    <div>
+      <h1><i class="bi bi-cash-stack icon" aria-hidden="true"></i> Financeiro</h1>
+      <p class="muted">Controle de pagamentos e indicadores de receita.</p>
+    </div>
+    <div class="admin-page-actions">
+      <a class="btn btn-outline btn-icon" href="/admin/dashboard"><i class="bi bi-speedometer2 icon" aria-hidden="true"></i>Dashboard</a>
+    </div>
+  </header>
+
+  <div class="admin-kpi-row">
+    <article class="admin-kpi-card"><p>Receita Total</p><h3><%= revenue.total %> MT</h3></article>
+    <article class="admin-kpi-card"><p>Receita do Mes</p><h3><%= revenue.monthly %> MT</h3></article>
+    <article class="admin-kpi-card"><p>Total Pagamentos</p><h3><%= payments.length %></h3></article>
+    <article class="admin-kpi-card"><p>Ticket Medio</p><h3><%= payments.length ? Math.round(payments.reduce((sum, p) => sum + Number(p.amount || 0), 0) / payments.length) : 0 %> MT</h3></article>
+    <article class="admin-kpi-card"><p>Dividas em aberto</p><h3><%= Number(openDebtsCount || 0) %></h3></article>
+    <article class="admin-kpi-card"><p>Valor em divida</p><h3><%= Number(openDebtsAmount || 0) %> MT</h3></article>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Ref</th>
+          <th>Metodo</th>
+          <th>Valor</th>
+          <th>Status</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% if (payments.length === 0) { %>
+        <tr><td colspan="5">Nenhum pagamento ainda.</td></tr>
+      <% } %>
+      <% payments.forEach(p => { %>
+        <tr>
+          <td><%= p.transactionRef %></td>
+          <td><%= p.method %></td>
+          <td><%= p.amount %> MT</td>
+          <td><span class="badge"><%= p.status %></span></td>
+          <td><%= p.paidAt.slice(0, 16).replace("T", " ") %></td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<%- include("../partials/footer") %>

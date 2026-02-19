@@ -1,0 +1,28 @@
+<%- include("../partials/header") %>
+<section class="title-row">
+  <h1>Gestao de Profissionais</h1>
+</section>
+
+<section class="auth">
+  <form method="post" action="/admin/profissionais" class="form">
+    <label>Nome
+      <input type="text" name="name" required />
+    </label>
+    <label>Especialidade
+      <input type="text" name="specialty" required />
+    </label>
+    <button class="btn" type="submit">Adicionar profissional</button>
+  </form>
+</section>
+
+<section>
+  <div class="grid">
+    <% staff.forEach(s => { %>
+      <article class="card">
+        <h3><%= s.name %></h3>
+        <p><%= s.specialty %></p>
+      </article>
+    <% }) %>
+  </div>
+</section>
+<%- include("../partials/footer") %>

@@ -1,0 +1,53 @@
+<%- include("../partials/header") %>
+<section class="title-row">
+  <h1>Carrinho</h1>
+  <a class="btn btn-outline" href="/cliente/dashboard">Voltar aos servicos</a>
+</section>
+
+<section class="card">
+  <% if (cartSummary.totalItems === 0) { %>
+    <p>Seu carrinho esta vazio.</p>
+    <a class="btn" href="/cliente/dashboard">Explorar servicos</a>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Servico</th>
+            <th>Preco unitario</th>
+            <th>Qtd</th>
+            <th>Subtotal</th>
+            <th>Acao</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% cartSummary.lines.forEach(line => { %>
+            <tr>
+              <td><%= line.name %></td>
+              <td><%= line.unitPrice %> MT</td>
+              <td><%= line.qty %></td>
+              <td><%= line.subtotal %> MT</td>
+              <td>
+                <form method="post" action="/cliente/carrinho/remove">
+                  <input type="hidden" name="serviceId" value="<%= line.serviceId %>" />
+                  <button class="btn btn-outline" type="submit">Remover 1</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <section class="title-row" style="margin-top: 1rem;">
+      <p><strong>Total:</strong> <%= cartSummary.totalAmount %> MT | <strong>Duracao:</strong> <%= cartSummary.totalDuration %> min</p>
+      <div class="actions">
+        <form method="post" action="/cliente/carrinho/limpar">
+          <button class="btn btn-outline" type="submit">Limpar carrinho</button>
+        </form>
+        <a class="btn" href="/cliente/reservas/nova">Seguir para pagamento</a>
+      </div>
+    </section>
+  <% } %>
+</section>
+<%- include("../partials/footer") %>

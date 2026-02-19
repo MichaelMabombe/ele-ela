@@ -1,0 +1,115 @@
+<%- include("../partials/header") %>
+<%
+  const safeSearchQuery = typeof searchQuery === "string" ? searchQuery : "";
+%>
+<section class="admin-page">
+  <header class="admin-page-header">
+    <div>
+      <h1><i class="bi bi-people icon" aria-hidden="true"></i> Clientes</h1>
+      <p class="muted">Gerencie tipo de cliente e acompanhe dividas dos pos-pagos.</p>
+    </div>
+    <div class="admin-page-actions">
+      <a class="btn btn-outline btn-icon" href="/admin/dashboard"><i class="bi bi-speedometer2 icon" aria-hidden="true"></i>Dashboard</a>
+    </div>
+  </header>
+
+  <section class="card">
+    <div class="title-row">
+      <h2>Clientes registados</h2>
+      <div class="quick-links">
+        <form method="get" action="/admin/clientes" class="search-inline-form">
+          <label class="search-label" for="q"><i class="bi bi-search icon" aria-hidden="true"></i></label>
+          <input id="q" type="search" name="q" placeholder="Pesquisar cliente..." value="<%= safeSearchQuery %>" />
+          <button class="btn btn-sm" type="submit">Pesquisar</button>
+        </form>
+        <a class="btn btn-outline btn-sm btn-icon" href="/admin/clientes/pdf<%= safeSearchQuery ? ('?q=' + encodeURIComponent(safeSearchQuery)) : '' %>">
+          <i class="bi bi-file-earmark-pdf icon" aria-hidden="true"></i>Baixar PDF
+        </a>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Telefone</th>
+            <th>Tipo</th>
+            <th>Atualizar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (clients.length === 0) { %>
+            <tr><td colspan="5">Nenhum cliente registado.</td></tr>
+          <% } %>
+          <% clients.forEach((client) => { %>
+            <tr>
+              <td><%= client.name %></td>
+              <td><%= client.email %></td>
+              <td><%= client.phone || "-" %></td>
+              <td><span class="badge"><%= client.clientType === "postpaid" ? "Pos-pago" : "Pre-pago" %></span></td>
+              <td>
+                <form method="post" action="/admin/clientes/<%= client.id %>/tipo" class="inline-form">
+                  <select name="clientType" required>
+                    <option value="prepaid" <%= client.clientType === "prepaid" ? "selected" : "" %>>Pre-pago</option>
+                    <option value="postpaid" <%= client.clientType === "postpaid" ? "selected" : "" %>>Pos-pago</option>
+                  </select>
+                  <button class="btn btn-sm" type="submit">Salvar</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Tabela de dividas</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Reserva</th>
+            <th>Valor</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Acao</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (debts.length === 0) { %>
+            <tr><td colspan="6">Sem dividas registadas.</td></tr>
+          <% } %>
+          <% debts.forEach((debt) => { %>
+            <% const client = usersById[debt.clientId]; %>
+            <tr>
+              <td><%= client ? client.name : "Cliente removido" %></td>
+              <td><%= debt.reservationId ? debt.reservationId.slice(0, 8) : "-" %></td>
+              <td><%= Number(debt.amount || 0) %> MT</td>
+              <td><span class="badge"><%= debt.status === "paid" ? "Paga" : "Aberta" %></span></td>
+              <td><%= String(debt.createdAt || "").slice(0, 16).replace("T", " ") %></td>
+              <td>
+                <% if (debt.status === "open") { %>
+                  <form method="post" action="/admin/dividas/<%= debt.id %>/pagar" class="inline-form">
+                    <select name="paymentMethod" required>
+                      <option value="">Metodo</option>
+                      <option value="M-Pesa">M-Pesa</option>
+                      <option value="e-Mola">e-Mola</option>
+                      <option value="Cartao">Cartao</option>
+                    </select>
+                    <button class="btn btn-sm" type="submit">Marcar paga</button>
+                  </form>
+                <% } else { %>
+                  <span class="muted">Pago</span>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>
+<%- include("../partials/footer") %>

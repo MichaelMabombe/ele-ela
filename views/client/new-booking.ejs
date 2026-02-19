@@ -1,0 +1,58 @@
+<%- include("../partials/header") %>
+<section class="auth">
+  <h1>Fechar Reserva (Checkout)</h1>
+  <p><strong>Tipo de cliente:</strong> <%= clientType === "postpaid" ? "Pos-pago" : "Pre-pago" %></p>
+
+  <div class="card">
+    <h3>Servicos selecionados</h3>
+    <% if (cartSummary.lines.length === 0) { %>
+      <p>Carrinho vazio.</p>
+    <% } else { %>
+      <ul class="cart-list">
+        <% cartSummary.lines.forEach(line => { %>
+          <li><%= line.name %> x<%= line.qty %> - <%= line.subtotal %> MT</li>
+        <% }) %>
+      </ul>
+      <p><strong>Total:</strong> <%= cartSummary.totalAmount %> MT</p>
+      <p><strong>Duracao estimada:</strong> <%= cartSummary.totalDuration %> min</p>
+    <% } %>
+  </div>
+
+  <form method="post" action="/cliente/reservas" class="form">
+    <label>Profissional
+      <select name="staffId" required>
+        <option value="">Selecione</option>
+        <% staff.forEach(p => { %>
+          <option value="<%= p.id %>"><%= p.name %> - <%= p.specialty %></option>
+        <% }) %>
+      </select>
+    </label>
+    <label>Data
+      <input type="date" name="date" min="<%= today %>" required />
+    </label>
+    <label>Hora de inicio
+      <select name="time" required>
+        <option value="">Selecione</option>
+        <option>08:00</option>
+        <option>09:00</option>
+        <option>10:00</option>
+        <option>11:00</option>
+        <option>12:00</option>
+        <option>14:00</option>
+        <option>15:00</option>
+        <option>16:00</option>
+        <option>17:00</option>
+      </select>
+    </label>
+    <label>Metodo de pagamento
+      <select name="paymentMethod" <%= clientType === "prepaid" ? "required" : "" %>>
+        <option value=""><%= clientType === "postpaid" ? "Pagar depois (registrar divida)" : "Selecione" %></option>
+        <option value="M-Pesa">M-Pesa</option>
+        <option value="e-Mola">e-Mola</option>
+        <option value="Cartao">Cartao</option>
+      </select>
+    </label>
+    <button class="btn" type="submit"><%= clientType === "postpaid" ? "Confirmar reserva" : "Confirmar reserva e pagar" %></button>
+  </form>
+</section>
+<%- include("../partials/footer") %>

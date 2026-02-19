@@ -1,0 +1,34 @@
+{
+  "name": "ele-ela",
+  "version": "1.0.0",
+  "description": "Sistema de reservas e pagamentos online Ela&Ele",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MichaelMabombe/ele-ela.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MichaelMabombe/ele-ela/issues"
+  },
+  "homepage": "https://github.com/MichaelMabombe/ele-ela#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "ejs": "^4.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "pdfkit": "^0.17.2",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.58.2"
+  }
+}

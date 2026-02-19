@@ -1,0 +1,57 @@
+<%- include("../partials/header") %>
+<section class="title-row">
+  <h1>Minhas Reservas</h1>
+  <div class="quick-links">
+    <a class="btn btn-outline btn-icon" href="/cliente/dashboard"><i class="bi bi-house-door icon" aria-hidden="true"></i>Voltar ao dashboard</a>
+    <a class="btn btn-icon" href="/cliente/carrinho"><i class="bi bi-cart3 icon" aria-hidden="true"></i>Ver carrinho</a>
+  </div>
+</section>
+
+<section>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Servicos</th>
+          <th>Profissional</th>
+          <th>Data</th>
+          <th>Hora</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Acao</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% if (reservations.length === 0) { %>
+        <tr><td colspan="7">Nenhuma reserva ainda.</td></tr>
+      <% } %>
+      <% reservations.forEach(r => { %>
+        <tr>
+          <td>
+            <% if (Array.isArray(r.cartItems) && r.cartItems.length > 0) { %>
+              <%= r.cartItems.map(item => (servicesById[item.serviceId]?.name || "N/A") + " x" + (item.qty || 1)).join(", ") %>
+            <% } else { %>
+              <%= servicesById[r.serviceId]?.name || "N/A" %>
+            <% } %>
+          </td>
+          <td><%= prosById[r.staffId]?.name || "N/A" %></td>
+          <td><%= r.date %></td>
+          <td><%= r.time %></td>
+          <td><%= r.totalAmount || servicesById[r.serviceId]?.price || 0 %> MT</td>
+          <td><span class="badge"><%= r.status %></span></td>
+          <td>
+            <% if (r.status !== "cancelled" && r.status !== "completed") { %>
+              <form method="post" action="/cliente/reservas/<%= r.id %>/cancelar">
+                <button class="btn btn-danger" type="submit">Cancelar</button>
+              </form>
+            <% } else { %>
+              -
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<%- include("../partials/footer") %>

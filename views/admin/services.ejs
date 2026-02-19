@@ -1,0 +1,136 @@
+<%- include("../partials/header") %>
+<section class="admin-page">
+  <header class="admin-page-header">
+    <div>
+      <h1><i class="bi bi-scissors icon" aria-hidden="true"></i> Gestao de Servicos</h1>
+      <p class="muted">Cadastre, organize e remova servicos do catalogo.</p>
+    </div>
+    <div class="admin-page-actions">
+      <a class="btn btn-outline btn-icon" href="/admin/dashboard"><i class="bi bi-speedometer2 icon" aria-hidden="true"></i>Dashboard</a>
+      <button id="toggle-add-service" class="btn btn-icon" type="button"><i class="bi bi-plus-lg icon" aria-hidden="true"></i>Adicionar servico</button>
+    </div>
+  </header>
+
+  <div class="admin-kpi-row">
+    <article class="admin-kpi-card">
+      <p>Total de servicos</p>
+      <h3><%= services.length %></h3>
+    </article>
+    <article class="admin-kpi-card">
+      <p>Preco medio</p>
+      <h3><%= services.length ? Math.round(services.reduce((s, item) => s + Number(item.price || 0), 0) / services.length) : 0 %> MT</h3>
+    </article>
+    <article class="admin-kpi-card">
+      <p>Duracao media</p>
+      <h3><%= services.length ? Math.round(services.reduce((s, item) => s + Number(item.duration || 0), 0) / services.length) : 0 %> min</h3>
+    </article>
+  </div>
+
+  <section id="add-service-panel" class="auth service-panel-collapsed">
+    <form method="post" action="/admin/servicos" class="form">
+      <label>Nome do servico
+        <input type="text" name="name" required />
+      </label>
+      <label>Preco (MT)
+        <input type="number" min="0" name="price" required />
+      </label>
+      <label>Duracao (min)
+        <input type="number" min="15" step="15" name="duration" required />
+      </label>
+      <button class="btn" type="submit">Salvar novo servico</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <label class="service-search">
+      <i class="bi bi-search icon" aria-hidden="true"></i>
+      <input id="services-search" type="text" placeholder="Pesquisar servicos..." />
+    </label>
+  </section>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Preco</th>
+          <th>Duracao</th>
+          <th>Acao</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% services.forEach(s => { %>
+        <tr class="service-row" data-service-name="<%= String(s.name || '').toLowerCase() %>">
+          <td><%= s.name %></td>
+          <td><%= s.price %> MT</td>
+          <td><%= s.duration %> min</td>
+          <td class="service-actions-cell">
+            <button class="btn btn-sm btn-outline btn-icon toggle-edit-service" type="button" data-target="edit-<%= s.id %>">
+              <i class="bi bi-pencil-square icon" aria-hidden="true"></i>Editar
+            </button>
+            <form method="post" action="/admin/servicos/<%= s.id %>/delete">
+              <button class="btn btn-sm btn-danger btn-icon" type="submit"><i class="bi bi-trash3 icon" aria-hidden="true"></i>Remover</button>
+            </form>
+          </td>
+        </tr>
+        <tr id="edit-<%= s.id %>" class="service-edit-row service-panel-collapsed">
+          <td colspan="4">
+            <form method="post" action="/admin/servicos/<%= s.id %>/update" class="form form-inline">
+              <label>Nome
+                <input type="text" name="name" value="<%= s.name %>" required />
+              </label>
+              <label>Preco (MT)
+                <input type="number" min="0" name="price" value="<%= s.price %>" required />
+              </label>
+              <label>Duracao (min)
+                <input type="number" min="15" step="15" name="duration" value="<%= s.duration %>" required />
+              </label>
+              <button class="btn btn-sm btn-icon" type="submit"><i class="bi bi-check2-circle icon" aria-hidden="true"></i>Salvar</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<script>
+  (function () {
+    var addBtn = document.getElementById("toggle-add-service");
+    var addPanel = document.getElementById("add-service-panel");
+    if (addBtn && addPanel) {
+      addBtn.addEventListener("click", function () {
+        addPanel.classList.toggle("service-panel-collapsed");
+      });
+    }
+
+    var searchInput = document.getElementById("services-search");
+    if (searchInput) {
+      searchInput.addEventListener("input", function () {
+        var q = String(searchInput.value || "").trim().toLowerCase();
+        var rows = document.querySelectorAll(".service-row");
+        rows.forEach(function (row) {
+          var name = row.getAttribute("data-service-name") || "";
+          var visible = !q || name.includes(q);
+          row.style.display = visible ? "" : "none";
+          var next = row.nextElementSibling;
+          if (next && next.classList.contains("service-edit-row") && !visible) {
+            next.style.display = "none";
+          } else if (next && next.classList.contains("service-edit-row") && visible) {
+            next.style.display = "";
+          }
+        });
+      });
+    }
+
+    var editButtons = document.querySelectorAll(".toggle-edit-service");
+    editButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var targetId = btn.getAttribute("data-target");
+        var row = document.getElementById(targetId);
+        if (row) row.classList.toggle("service-panel-collapsed");
+      });
+    });
+  })();
+</script>
+<%- include("../partials/footer") %>

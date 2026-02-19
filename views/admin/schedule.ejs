@@ -1,0 +1,144 @@
+<%- include("../partials/header") %>
+<%
+  const viewMode = typeof mode === "string" ? mode : "list";
+  const safeMonthParam = typeof monthParam === "string" ? monthParam : "";
+  const safePrevMonthParam = typeof prevMonthParam === "string" ? prevMonthParam : safeMonthParam;
+  const safeNextMonthParam = typeof nextMonthParam === "string" ? nextMonthParam : safeMonthParam;
+  const safeMonthLabel = typeof monthLabel === "string" ? monthLabel : "Calendario";
+  const safeWeekdayNames = typeof weekdayNames !== "undefined" && Array.isArray(weekdayNames) ? weekdayNames : ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+  const safeCalendarDays = typeof calendarDays !== "undefined" && Array.isArray(calendarDays) ? calendarDays : [];
+  const safeMonthRange = (typeof monthRange === "object" && monthRange) ? monthRange : { start: "-", end: "-" };
+%>
+<section class="admin-page">
+  <header class="admin-page-header">
+    <div>
+      <h1><i class="bi bi-calendar3 icon" aria-hidden="true"></i> Agenda de Reservas</h1>
+      <p class="muted">Atualize status e reagende reservas em um unico lugar.</p>
+    </div>
+    <div class="admin-page-actions">
+      <a class="btn btn-outline btn-icon" href="/admin/dashboard"><i class="bi bi-speedometer2 icon" aria-hidden="true"></i>Dashboard</a>
+    </div>
+  </header>
+
+  <div class="admin-kpi-row">
+    <article class="admin-kpi-card">
+      <p>Total</p>
+      <h3><%= reservations.length %></h3>
+    </article>
+    <article class="admin-kpi-card">
+      <p>Pendentes</p>
+      <h3><%= reservations.filter(r => r.status === "pending").length %></h3>
+    </article>
+    <article class="admin-kpi-card">
+      <p>Confirmadas</p>
+      <h3><%= reservations.filter(r => r.status === "confirmed").length %></h3>
+    </article>
+    <article class="admin-kpi-card">
+      <p>Concluidas</p>
+      <h3><%= reservations.filter(r => r.status === "completed").length %></h3>
+    </article>
+  </div>
+
+  <div class="agenda-mode-switch">
+    <a class="btn <%= viewMode === 'list' ? '' : 'btn-outline' %>" href="/admin/agenda?mode=list">Modo lista</a>
+    <a class="btn <%= viewMode === 'calendar' ? '' : 'btn-outline' %>" href="/admin/agenda?mode=calendar&month=<%= safeMonthParam %>">Ver calendario</a>
+  </div>
+
+  <% if (viewMode === "calendar") { %>
+    <section class="card">
+      <div class="calendar-toolbar">
+        <a class="btn btn-outline btn-sm" href="/admin/agenda?mode=calendar&month=<%= safePrevMonthParam %>">&lt; Mes anterior</a>
+        <h2><%= safeMonthLabel %></h2>
+        <a class="btn btn-outline btn-sm" href="/admin/agenda?mode=calendar&month=<%= safeNextMonthParam %>">Proximo mes &gt;</a>
+      </div>
+      <p class="muted">Reservas de <%= safeMonthRange.start %> ate <%= safeMonthRange.end %>.</p>
+      <div class="calendar-weekdays">
+        <% safeWeekdayNames.forEach((weekday) => { %>
+          <div><%= weekday %></div>
+        <% }) %>
+      </div>
+      <div class="calendar-grid">
+        <% safeCalendarDays.forEach((day) => { %>
+          <article class="calendar-day <%= day.inCurrentMonth ? '' : 'calendar-day-muted' %>">
+            <p class="calendar-day-number"><%= day.day %></p>
+            <% if (day.reservations.length === 0) { %>
+              <p class="muted">Sem reservas</p>
+            <% } else { %>
+              <ul class="calendar-events">
+                <% day.reservations.slice(0, 4).forEach((r) => { %>
+                  <li>
+                    <strong><%= r.time %></strong>
+                    <span><%= usersById[r.clientId]?.name || "Cliente" %></span>
+                    <span class="badge badge-status badge-status-<%= r.status %>"><%= r.status %></span>
+                  </li>
+                <% }) %>
+              </ul>
+              <% if (day.reservations.length > 4) { %>
+                <p class="muted">+<%= day.reservations.length - 4 %> reservas</p>
+              <% } %>
+            <% } %>
+          </article>
+        <% }) %>
+      </div>
+    </section>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Servico</th>
+            <th>Profissional</th>
+            <th>Data</th>
+            <th>Hora</th>
+            <th>Status</th>
+            <th>Atualizar</th>
+            <th>Reagendar</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% if (reservations.length === 0) { %>
+          <tr><td colspan="8">Nenhuma reserva encontrada.</td></tr>
+        <% } %>
+        <% reservations.forEach(r => { %>
+          <tr>
+            <td><%= usersById[r.clientId]?.name || "N/A" %></td>
+            <td>
+              <% if (Array.isArray(r.cartItems) && r.cartItems.length > 0) { %>
+                <%= r.cartItems.map(item => (servicesById[item.serviceId]?.name || "N/A") + " x" + (item.qty || 1)).join(", ") %>
+              <% } else { %>
+                <%= servicesById[r.serviceId]?.name || "N/A" %>
+              <% } %>
+            </td>
+            <td><%= prosById[r.staffId]?.name || "N/A" %></td>
+            <td><%= r.date %></td>
+            <td><%= r.time %></td>
+            <td><span class="badge badge-status badge-status-<%= r.status %>"><%= r.status %></span></td>
+            <td>
+              <form method="post" action="/admin/reservas/<%= r.id %>/status" class="inline-form">
+                <input type="hidden" name="returnMode" value="<%= viewMode %>" />
+                <input type="hidden" name="returnMonth" value="<%= safeMonthParam %>" />
+                <select name="status">
+                  <option value="pending" <%= r.status === "pending" ? "selected" : "" %>>pending</option>
+                  <option value="confirmed" <%= r.status === "confirmed" ? "selected" : "" %>>confirmed</option>
+                  <option value="completed" <%= r.status === "completed" ? "selected" : "" %>>completed</option>
+                  <option value="cancelled" <%= r.status === "cancelled" ? "selected" : "" %>>cancelled</option>
+                </select>
+                <button class="btn" type="submit">Salvar</button>
+              </form>
+            </td>
+            <td>
+              <form method="post" action="/admin/reservas/<%= r.id %>/reagendar" class="inline-form">
+                <input type="date" name="date" required />
+                <input type="time" name="time" required />
+                <button class="btn btn-outline" type="submit">OK</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+<%- include("../partials/footer") %>

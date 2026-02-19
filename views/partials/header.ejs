@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ela&Ele Salon</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="/" class="logo">Ela<span>&</span>Ele</a>
+      <nav class="nav">
+        <% if (!currentUser) { %>
+          <a href="/login"><i class="bi bi-shield-lock icon" aria-hidden="true"></i> Entrar</a>
+          <a href="/register"><i class="bi bi-person-plus icon" aria-hidden="true"></i> Criar conta</a>
+        <% } else if (currentUser.role === "admin") { %>
+          <a href="/admin/dashboard"><i class="bi bi-speedometer2 icon" aria-hidden="true"></i> Dashboard</a>
+          <a href="/admin/clientes"><i class="bi bi-people icon" aria-hidden="true"></i> Clientes</a>
+          <a href="/admin/agenda"><i class="bi bi-calendar3 icon" aria-hidden="true"></i> Agenda</a>
+          <a href="/admin/servicos"><i class="bi bi-scissors icon" aria-hidden="true"></i> Servicos</a>
+          <a href="/admin/financeiro"><i class="bi bi-cash-stack icon" aria-hidden="true"></i> Financeiro</a>
+          <a href="/admin/relatorios"><i class="bi bi-bar-chart-line icon" aria-hidden="true"></i> Relatorios</a>
+          <form action="/logout" method="post">
+            <button class="link-btn" type="submit"><i class="bi bi-box-arrow-right icon" aria-hidden="true"></i> Sair</button>
+          </form>
+        <% } else { %>
+          <a href="/cliente/dashboard"><i class="bi bi-house-door icon" aria-hidden="true"></i> Minha area</a>
+          <a href="/cliente/reservas"><i class="bi bi-calendar3 icon" aria-hidden="true"></i> Minhas reservas</a>
+          <a href="/cliente/carrinho"><i class="bi bi-cart3 icon" aria-hidden="true"></i> Carrinho (<%= cartCount || 0 %>)</a>
+          <a href="/cliente/reservas/nova"><i class="bi bi-bag-check icon" aria-hidden="true"></i> Checkout</a>
+          <form action="/logout" method="post">
+            <button class="link-btn" type="submit"><i class="bi bi-box-arrow-right icon" aria-hidden="true"></i> Sair</button>
+          </form>
+        <% } %>
+      </nav>
+    </div>
+  </header>
+  <main class="container page">
+    <% if (flash) { %>
+      <div class="alert <%= flash.type === 'error' ? 'alert-error' : 'alert-success' %>">
+        <%= flash.message %>
+      </div>
+    <% } %>
