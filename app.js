@@ -751,6 +751,19 @@ app.get("/admin/clientes/pdf", requireRole("admin"), (req, res) => {
   const totalClients = clients.length;
   const prepaidCount = clients.filter((c) => c.clientType !== "postpaid").length;
   const postpaidCount = clients.filter((c) => c.clientType === "postpaid").length;
+  const colors = {
+    pageBg: "#fbf8ee",
+    headerBg: "#011514",
+    primary: "#0a2826",
+    gold: "#b7792e",
+    goldSoft: "#f2d97c",
+    cardBg: "#fffdf6",
+    border: "#d6bf8b",
+    text: "#162120",
+    textMuted: "#53605e",
+    white: "#ffffff",
+    rowAlt: "#f9f3df",
+  };
 
   const safeDate = new Date().toISOString().slice(0, 10);
   res.setHeader("Content-Type", "application/pdf");
@@ -759,51 +772,57 @@ app.get("/admin/clientes/pdf", requireRole("admin"), (req, res) => {
 
   const drawMainHeader = () => {
     doc.save();
-    doc.roundedRect(margin, margin, contentWidth, headerBandHeight, 16).fill("#f7e8e8");
+    doc.roundedRect(margin, margin, contentWidth, pageHeight - margin * 2, 18).fill(colors.pageBg);
+    doc.restore();
+
+    doc.save();
+    doc.roundedRect(margin, margin, contentWidth, headerBandHeight, 16).fill(colors.headerBg);
+    doc.roundedRect(margin, margin + headerBandHeight - 8, contentWidth, 8, 0).fill(colors.gold);
     doc.restore();
 
     if (logoPath) {
       doc.image(logoPath, margin + 16, margin + 13, { fit: [68, 68], align: "left", valign: "center" });
     }
 
-    doc.fillColor("#5e2b3b").font("Helvetica-Bold").fontSize(20);
+    doc.fillColor(colors.goldSoft).font("Helvetica-Bold").fontSize(20);
     doc.text("Relatorio de Clientes", margin + 98, margin + 20, { width: 300 });
-    doc.font("Helvetica").fontSize(10).fillColor("#6b6b6b");
+    doc.font("Helvetica").fontSize(10).fillColor("#c8d2d1");
     doc.text(`Gerado em: ${generatedAt}`, margin + 98, margin + 50, { width: 280 });
     doc.text("Salao Ela&Ele", margin + 98, margin + 64, { width: 280 });
 
     if (searchQuery) {
-      doc.font("Helvetica-Bold").fillColor("#5e2b3b");
+      doc.font("Helvetica-Bold").fillColor(colors.white);
       doc.text(`Filtro: ${searchQuery}`, margin + 360, margin + 24, { width: 170, align: "right" });
     }
   };
 
   const drawSummaryCard = (x, y, width, label, value) => {
     doc.save();
-    doc.roundedRect(x, y, width, 54, 10).fill("#fff8f8");
+    doc.roundedRect(x, y, width, 54, 10).fill(colors.cardBg);
     doc.restore();
     doc.save();
-    doc.roundedRect(x, y, width, 54, 10).lineWidth(0.6).strokeColor("#edcdd6").stroke();
+    doc.roundedRect(x, y, width, 54, 10).lineWidth(0.8).strokeColor(colors.border).stroke();
+    doc.moveTo(x, y + 18).lineTo(x + width, y + 18).lineWidth(0.5).strokeColor(colors.goldSoft).stroke();
     doc.restore();
 
-    doc.fillColor("#7b4b5d").font("Helvetica").fontSize(9).text(label, x + 12, y + 10, { width: width - 24 });
-    doc.fillColor("#3d1f2a").font("Helvetica-Bold").fontSize(16).text(String(value), x + 12, y + 24, {
+    doc.fillColor(colors.textMuted).font("Helvetica").fontSize(9).text(label, x + 12, y + 6, { width: width - 24 });
+    doc.fillColor(colors.primary).font("Helvetica-Bold").fontSize(16).text(String(value), x + 12, y + 24, {
       width: width - 24,
     });
   };
 
   const drawTableHeader = () => {
     doc.save();
-    doc.roundedRect(margin, tableTopY, contentWidth, 24, 6).fill("#5e2b3b");
+    doc.roundedRect(margin, tableTopY, contentWidth, 24, 6).fill(colors.primary);
     doc.restore();
 
     const y = tableTopY + 7;
-    doc.font("Helvetica-Bold").fontSize(10).fillColor("#ffffff");
+    doc.font("Helvetica-Bold").fontSize(10).fillColor(colors.goldSoft);
     doc.text("Nome", colX.name, y, { width: 170, lineBreak: false });
     doc.text("Email", colX.email, y, { width: 160, lineBreak: false });
     doc.text("Telefone", colX.phone, y, { width: 70, lineBreak: false });
     doc.text("Tipo", colX.type, y, { width: 90, lineBreak: false });
-    doc.fillColor("#222222").font("Helvetica");
+    doc.fillColor(colors.text).font("Helvetica");
   };
 
   const drawPageTemplate = () => {
@@ -819,7 +838,7 @@ app.get("/admin/clientes/pdf", requireRole("admin"), (req, res) => {
 
   const drawFooter = () => {
     const footerText = `Ela&Ele - Pagina ${doc.page.number}`;
-    doc.font("Helvetica").fontSize(8).fillColor("#9a9a9a");
+    doc.font("Helvetica").fontSize(8).fillColor(colors.textMuted);
     doc.text(footerText, margin, pageHeight - 28, { width: contentWidth, align: "right", lineBreak: false });
   };
 
@@ -835,11 +854,11 @@ app.get("/admin/clientes/pdf", requireRole("admin"), (req, res) => {
     const isEven = Math.floor((y - (tableTopY + 30)) / rowHeight) % 2 === 0;
     if (isEven) {
       doc.save();
-      doc.rect(margin, y - 2, contentWidth, rowHeight).fill("#fdf6f7");
+      doc.rect(margin, y - 2, contentWidth, rowHeight).fill(colors.rowAlt);
       doc.restore();
     }
 
-    doc.fontSize(9).fillColor("#222222");
+    doc.fontSize(9).fillColor(colors.text);
     doc.text(String(client.name || "-"), colX.name, y + 5, { width: 170, ellipsis: true, lineBreak: false });
     doc.text(String(client.email || "-"), colX.email, y + 5, { width: 160, ellipsis: true, lineBreak: false });
     doc.text(String(client.phone || "-"), colX.phone, y + 5, { width: 70, ellipsis: true, lineBreak: false });
@@ -848,7 +867,10 @@ app.get("/admin/clientes/pdf", requireRole("admin"), (req, res) => {
       lineBreak: false,
     });
     doc.save();
-    doc.moveTo(margin, y + rowHeight - 1).lineTo(margin + contentWidth, y + rowHeight - 1).lineWidth(0.3).stroke("#edd5dc");
+    doc.moveTo(margin, y + rowHeight - 1)
+      .lineTo(margin + contentWidth, y + rowHeight - 1)
+      .lineWidth(0.3)
+      .stroke(colors.border);
     doc.restore();
     doc.y = y + rowHeight;
   });
