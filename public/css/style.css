@@ -788,6 +788,74 @@ h3 {
   margin-top: 0.15rem;
 }
 
+.register-page {
+  display: grid;
+  grid-template-columns: minmax(320px, 520px) minmax(230px, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.register-main-card {
+  margin: 0;
+}
+
+.register-kicker {
+  color: #fff;
+  background: linear-gradient(120deg, #ff6f3c, #ff8a00);
+  border-color: transparent;
+}
+
+.register-form {
+  gap: 0.95rem;
+}
+
+.register-submit {
+  margin-top: 0.15rem;
+}
+
+.register-side-card {
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.94), rgba(255, 248, 242, 0.94));
+}
+
+.register-kicker-muted {
+  margin-bottom: 0.45rem;
+  color: #a34c25;
+  border-color: #ffd8c5;
+  background: #fff2e8;
+}
+
+.register-side-card h3 {
+  margin: 0.2rem 0 0.6rem;
+  color: #6c2f17;
+}
+
+.register-benefits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.register-benefits li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #7a4024;
+  background: #fff;
+  border: 1px solid #ffe2d1;
+  border-radius: 12px;
+  padding: 0.58rem 0.62rem;
+}
+
+.register-benefits .icon {
+  color: #d15326;
+}
+
+.register-side-note {
+  margin: 0.75rem 0 0;
+}
+
 .auth {
   max-width: 560px;
   margin: 0 auto 1.4rem;
@@ -1759,6 +1827,10 @@ th {
   }
 
   .checkout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .register-page {
     grid-template-columns: 1fr;
   }
 

@@ -1,41 +1,54 @@
 <%- include("../partials/header") %>
-<section class="auth auth-login">
-  <div class="auth-head">
-    <p class="kicker">Novo cadastro</p>
-    <h1>Criar conta cliente</h1>
-    <p class="muted">Preencha os seus dados para criar a conta.</p>
-  </div>
-  <form method="post" action="/register" class="form">
-    <label>Nome completo</label>
-    <div class="input-with-icon">
-      <i class="bi bi-person icon" aria-hidden="true"></i>
-      <input type="text" name="name" placeholder="Digite seu nome completo" required />
+<section class="register-page">
+  <article class="auth auth-login register-main-card">
+    <div class="auth-head">
+      <p class="kicker register-kicker">Novo cadastro</p>
+      <h1>Criar conta cliente</h1>
+      <p class="muted">Preencha os seus dados para criar a conta.</p>
     </div>
-
-    <label>Telefone</label>
-    <div class="input-with-icon">
-      <i class="bi bi-telephone icon" aria-hidden="true"></i>
-      <input type="text" name="phone" placeholder="Ex.: 84 000 0000" required />
-    </div>
-
-    <label>Email</label>
-    <div class="input-with-icon">
-      <i class="bi bi-envelope icon" aria-hidden="true"></i>
-      <input type="email" name="email" placeholder="seuemail@exemplo.com" required />
-    </div>
-
-    <label>Senha
-      <div class="input-with-icon password-field">
-        <i class="bi bi-lock icon" aria-hidden="true"></i>
-        <input id="register-password" type="password" name="password" minlength="6" placeholder="Minimo de 6 caracteres" required />
-        <button id="toggle-register-password" type="button" class="password-toggle" aria-label="Mostrar senha">
-          <i class="bi bi-eye" aria-hidden="true"></i>
-        </button>
+    <form method="post" action="/register" class="form register-form">
+      <label>Nome completo</label>
+      <div class="input-with-icon">
+        <i class="bi bi-person icon" aria-hidden="true"></i>
+        <input type="text" name="name" placeholder="Digite seu nome completo" required />
       </div>
-    </label>
-    <button class="btn auth-submit" type="submit">Criar conta</button>
-  </form>
-  <p class="auth-alt">Ja tem conta? <a href="/login">Entrar</a></p>
+
+      <label>Telefone</label>
+      <div class="input-with-icon">
+        <i class="bi bi-telephone icon" aria-hidden="true"></i>
+        <input type="text" name="phone" placeholder="Ex.: 84 000 0000" required />
+      </div>
+
+      <label>Email</label>
+      <div class="input-with-icon">
+        <i class="bi bi-envelope icon" aria-hidden="true"></i>
+        <input type="email" name="email" placeholder="seuemail@exemplo.com" required />
+      </div>
+
+      <label>Senha
+        <div class="input-with-icon password-field">
+          <i class="bi bi-lock icon" aria-hidden="true"></i>
+          <input id="register-password" type="password" name="password" minlength="6" placeholder="Minimo de 6 caracteres" required />
+          <button id="toggle-register-password" type="button" class="password-toggle" aria-label="Mostrar senha">
+            <i class="bi bi-eye" aria-hidden="true"></i>
+          </button>
+        </div>
+      </label>
+      <button class="btn auth-submit register-submit" type="submit">Criar conta</button>
+    </form>
+    <p class="auth-alt">Ja tem conta? <a href="/login?mode=signin">Entrar</a></p>
+  </article>
+
+  <aside class="card register-side-card">
+    <p class="kicker register-kicker-muted">Vantagens</p>
+    <h3>Sua area pessoal no Ela&Ele</h3>
+    <ul class="register-benefits">
+      <li><i class="bi bi-calendar-check icon" aria-hidden="true"></i> Reservas em poucos passos</li>
+      <li><i class="bi bi-clock-history icon" aria-hidden="true"></i> Historico completo de atendimentos</li>
+      <li><i class="bi bi-wallet2 icon" aria-hidden="true"></i> Pagamento seguro por M-Pesa, e-Mola ou cartao</li>
+    </ul>
+    <p class="muted register-side-note">Conta criada em menos de 1 minuto.</p>
+  </aside>
 </section>
 <script>
   (function () {
