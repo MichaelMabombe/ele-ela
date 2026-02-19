@@ -70,6 +70,29 @@ h3 {
   font-size: 1.8rem;
   font-weight: 800;
   color: #0f3a49;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-mark {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
+  max-width: 22px;
+  max-height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ffd5be;
+  box-shadow: 0 2px 6px rgba(12, 28, 36, 0.12);
+  background: #fff;
+  display: block;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  line-height: 1;
 }
 
 .logo span {
@@ -122,8 +145,24 @@ h3 {
 .site-signature-grid {
   padding: 0.9rem 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 0.85rem;
+}
+
+.site-signature-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.site-signature-logo {
+  width: 54px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ffd6bf;
+  box-shadow: 0 8px 16px rgba(22, 38, 46, 0.12);
+  background: #fff;
 }
 
 .site-signature-title {
@@ -166,6 +205,24 @@ h3 {
 .site-social-row a:hover {
   transform: translateY(-1px);
   background: #eef9fd;
+}
+
+.site-social-row a.social-instagram {
+  color: #c13584;
+  border-color: #f1b9da;
+  background: #fff3fb;
+}
+
+.site-social-row a.social-whatsapp {
+  color: #1f9d47;
+  border-color: #a9e2bb;
+  background: #effdf3;
+}
+
+.site-social-row a.social-tiktok {
+  color: #101010;
+  border-color: #cfcfcf;
+  background: #f8f8f8;
 }
 
 .hero {
@@ -370,61 +427,56 @@ h3 {
 .home-insight-card {
   margin: 0;
   border-radius: 16px;
-  padding: 0.95rem 0.9rem;
-  border: 2px solid transparent;
-  box-shadow: 0 16px 30px rgba(15, 26, 34, 0.17);
+  padding: 0.7rem 0.75rem 0.82rem;
+  border: 1px solid #cce2ea;
+  box-shadow: 0 10px 20px rgba(15, 26, 34, 0.11);
   display: grid;
-  gap: 0.35rem;
-  min-height: 140px;
+  gap: 0.45rem;
+  min-height: 220px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: linear-gradient(180deg, #ffffff, #f8fcfe);
 }
 
 .home-insight-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 22px 38px rgba(15, 26, 34, 0.24);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 28px rgba(15, 26, 34, 0.16);
 }
 
-.home-insight-icon {
-  margin: 0;
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  font-size: 1.3rem;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.2);
+.home-insight-photo {
+  width: 100%;
+  height: 106px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid #d5e8ef;
 }
 
 .home-insight-card h3 {
-  margin: 0.1rem 0 0;
-  color: #fff;
-  font-size: 1.06rem;
+  margin: 0;
+  color: #21495a;
+  font-size: 1.02rem;
 }
 
 .home-insight-card p {
   margin: 0;
-  color: rgba(255, 255, 255, 0.92);
+  color: #476b7b;
+  font-size: 0.9rem;
+  line-height: 1.35;
 }
 
 .insight-hours {
-  background: linear-gradient(145deg, #ff5e3a, #ff8742);
-  border-color: #ffbb95;
+  border-color: #d8e7ec;
 }
 
 .insight-location {
-  background: linear-gradient(145deg, #008ff5, #25b7ff);
-  border-color: #8fd9ff;
+  border-color: #d6e6ee;
 }
 
 .insight-booking {
-  background: linear-gradient(145deg, #0fbb9c, #33d3b4);
-  border-color: #96f1dd;
+  border-color: #d5e7e9;
 }
 
 .insight-payment {
-  background: linear-gradient(145deg, #7a4cff, #a769ff);
-  border-color: #ceb3ff;
+  border-color: #d8e3ee;
 }
 
 .hero-banner-actions {
