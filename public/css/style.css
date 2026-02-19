@@ -113,15 +113,59 @@ h3 {
 .site-signature {
   margin-top: 1rem;
   border-top: 1px solid #ffd8c5;
-  background: rgba(255, 248, 242, 0.95);
+  background:
+    radial-gradient(140px 90px at 15% 10%, rgba(174, 229, 248, 0.35), transparent 72%),
+    radial-gradient(160px 95px at 85% 8%, rgba(255, 208, 178, 0.28), transparent 74%),
+    rgba(255, 248, 242, 0.97);
 }
 
-.site-signature p {
-  margin: 0;
+.site-signature-grid {
   padding: 0.9rem 0;
-  text-align: center;
-  color: #7a3d21;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.site-signature-title {
+  margin: 0;
+  color: #6c3018;
+  font-family: "League Spartan", sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.site-signature-text {
+  margin: 0.3rem 0 0;
+  color: #7d4327;
   font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.site-social-row {
+  margin-top: 0.55rem;
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.site-social-row a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  text-decoration: none;
+  font-size: 0.84rem;
+  color: #1d5266;
+  background: #fff;
+  border: 1px solid #bde1ee;
+  border-radius: 999px;
+  padding: 0.34rem 0.6rem;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.site-social-row a:hover {
+  transform: translateY(-1px);
+  background: #eef9fd;
 }
 
 .hero {
@@ -171,17 +215,7 @@ h3 {
     radial-gradient(120px 74px at 12% 22%, rgba(255, 138, 181, 0.34), transparent 68%),
     radial-gradient(110px 70px at 26% 70%, rgba(255, 192, 143, 0.3), transparent 70%),
     radial-gradient(130px 82px at 74% 20%, rgba(126, 238, 224, 0.28), transparent 68%),
-    radial-gradient(126px 78px at 88% 68%, rgba(255, 156, 122, 0.28), transparent 68%),
-    repeating-linear-gradient(
-      120deg,
-      rgba(255, 255, 255, 0.08) 0 1px,
-      transparent 1px 18px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      rgba(126, 238, 224, 0.08) 0 1px,
-      transparent 1px 24px
-    );
+    radial-gradient(126px 78px at 88% 68%, rgba(255, 156, 122, 0.28), transparent 68%);
   animation: floral-tech-float 14s ease-in-out infinite alternate;
 }
 
@@ -209,6 +243,121 @@ h3 {
 .hero-banner-content p {
   margin: 0.75rem 0 0;
   font-size: 1.04rem;
+}
+
+.home-hero-kicker {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.44);
+}
+
+.home-hero-features {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+  max-width: 760px;
+}
+
+.home-hero-feature-card {
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 14px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.14));
+  box-shadow: 0 10px 20px rgba(8, 16, 22, 0.18);
+  padding: 0.55rem 0.6rem;
+  display: grid;
+  gap: 0.3rem;
+  backdrop-filter: blur(5px);
+  animation: rise 0.45s ease;
+}
+
+.home-hero-feature-icon {
+  margin: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.home-hero-feature-card h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.home-hero-features-below {
+  max-width: none;
+  margin: 0 0 1.2rem;
+  gap: 1rem;
+}
+
+.home-hero-features-below .home-hero-feature-card {
+  min-height: 138px;
+  padding: 1.05rem 1rem;
+  border-width: 2px;
+  box-shadow: 0 16px 34px rgba(10, 18, 24, 0.22);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.home-hero-features-below .home-hero-feature-card:hover {
+  transform: translateY(-5px) scale(1.015);
+  filter: saturate(1.2);
+  box-shadow: 0 24px 44px rgba(8, 14, 20, 0.28);
+}
+
+.home-hero-features-below .home-hero-feature-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  font-size: 1.5rem;
+  color: #ffffff;
+  box-shadow: inset 0 -8px 16px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.16);
+}
+
+.home-hero-features-below .home-hero-feature-card h3 {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+  letter-spacing: 0.01em;
+}
+
+.home-hero-features-below .home-hero-feature-card:nth-child(1) {
+  background:
+    radial-gradient(110px 70px at 84% 16%, rgba(255, 255, 255, 0.26), transparent 70%),
+    linear-gradient(145deg, #ff4b1f, #ff7a00 58%, #ff9f1a);
+  border-color: #ffb36f;
+}
+
+.home-hero-features-below .home-hero-feature-card:nth-child(1) .home-hero-feature-icon {
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.home-hero-features-below .home-hero-feature-card:nth-child(2) {
+  background:
+    radial-gradient(110px 70px at 84% 16%, rgba(255, 255, 255, 0.26), transparent 70%),
+    linear-gradient(145deg, #0077ff, #00a7ff 58%, #3bd4ff);
+  border-color: #79c9ff;
+}
+
+.home-hero-features-below .home-hero-feature-card:nth-child(2) .home-hero-feature-icon {
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.home-hero-features-below .home-hero-feature-card:nth-child(3) {
+  background:
+    radial-gradient(110px 70px at 84% 16%, rgba(255, 255, 255, 0.26), transparent 70%),
+    linear-gradient(145deg, #6a11cb, #8a2be2 58%, #b24dff);
+  border-color: #c893ff;
+}
+
+.home-hero-features-below .home-hero-feature-card:nth-child(3) .home-hero-feature-icon {
+  background: rgba(0, 0, 0, 0.16);
 }
 
 .hero-banner-actions {
@@ -553,11 +702,6 @@ h3 {
   100% {
     transform: translateX(-50%);
   }
-}
-
-.home-cta {
-  margin-top: 1rem;
-  text-align: center;
 }
 
 .service-grid {
@@ -1977,6 +2121,10 @@ th {
     padding: 1.2rem;
   }
 
+  .home-hero-features {
+    grid-template-columns: 1fr;
+  }
+
   .hero-banner-actions {
     right: 0.8rem;
     bottom: 0.8rem;
@@ -2044,6 +2192,10 @@ th {
   }
 
   .login-page {
+    grid-template-columns: 1fr;
+  }
+
+  .site-signature-grid {
     grid-template-columns: 1fr;
   }
 
