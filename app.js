@@ -206,10 +206,12 @@ app.get("/", (req, res) => {
   const highlightImages = getHomeHighlightImages();
   const services = db.services.slice(0, 6).map((service, index) => ({
     ...service,
-    image:
-      highlightImages.length > 0
-        ? highlightImages[index % highlightImages.length]
-        : getServiceImage(service.name, index),
+    image: (() => {
+      const highlightImage = highlightImages.length > 0 ? highlightImages[index % highlightImages.length] : "";
+      const mappedImage = getServiceImage(service.name, index);
+      const existingImage = String(service.image || "").trim();
+      return highlightImage || existingImage || mappedImage || "/images/services/default-1.jpg";
+    })(),
   }));
   res.render("index", { services });
 });
